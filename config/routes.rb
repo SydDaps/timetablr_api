@@ -1,3 +1,22 @@
 Rails.application.routes.draw do
-  # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
+  
+  namespace :api do
+    namespace :v1 do
+      resources :token, only: [:create]
+      resources :users, only: [:create]
+      resources :time_tables, only: [:create, :index]
+      
+      resources :time_tables do
+        resources :rooms, only: [:create, :index]
+        resources :time_tags, only: [:create, :index]
+        resources :departments, only: [:create, :index]
+        resources :lecturers, only: [:create, :index]
+        resources :levels, only: [:create, :index]
+        resources :courses, only: [:create, :index]
+      end
+    end
+  end
+  
+  
+  
 end
