@@ -17,6 +17,7 @@ gem 'puma', '~> 5.0'
 gem 'bcrypt', '~> 3.1.7'
 gem 'figaro', '~> 1.1', '>= 1.1.1'
 gem 'jwt', '~> 1.5', '>= 1.5.4'
+gem 'rack-cors'
 
 
 # Use Active Storage variant
