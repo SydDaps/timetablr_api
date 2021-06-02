@@ -12,18 +12,6 @@ module RoomService
                 name: @name,
                 capacity: @capacity
             )
-
-            @time_tags.each do |time_tag_id|
-                time_tag = TimeTag.find_by_id(time_tag_id)
-                unless time_tag
-                    raise Exceptions::MissingParam, "Time Tag for id #{time_tag_id} not found"
-                end
-
-                room.time_tags << time_tag
-            end
-
-
-            room
         end
 
     end

@@ -7,7 +7,9 @@ Rails.application.routes.draw do
       resources :time_tables, only: [:create, :index]
       
       resources :time_tables do
-        resources :rooms, only: [:create, :index]
+        resources :rooms, only: [:create, :index, :link_tags]
+        post '/rooms_tags', to: 'rooms#link_tags'
+        
         resources :time_tags, only: [:create, :index]
         resources :departments, only: [:create, :index]
         resources :lecturers, only: [:create, :index]

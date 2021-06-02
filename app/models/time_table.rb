@@ -1,5 +1,4 @@
 class TimeTable < ApplicationRecord
-    after_create :create_days
     
     belongs_to :user
 
@@ -19,15 +18,5 @@ class TimeTable < ApplicationRecord
     validates :category, inclusion: { in: %w(undergrad masters others diploma),
         message: "%{value} is not  a valid kind"
     }
-
-
-    private
-
-    def create_days
-        names = ["Mon","Tues","Wed","Thu","Fri"]
-        names.each do |name|
-            self.days.create!(name: name)
-        end
-    end
 
 end

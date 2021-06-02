@@ -4,4 +4,5 @@ class Day < ApplicationRecord
     has_and_belongs_to_many :time_tags, dependent: :destroy
 
     validates :name, presence: { message: 'for Day blank' }
+    validates :number, presence: { message: 'for Day blank' }
 end
