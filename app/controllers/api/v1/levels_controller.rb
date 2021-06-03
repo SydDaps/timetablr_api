@@ -13,7 +13,7 @@ class Api::V1::LevelsController < ApplicationController
             success: true,
             code: 200,
             data: {
-              Level: LevelSerializer.new( levels ).serialize
+              levels: LevelSerializer.new( levels ).serialize
             }
         }
     end 
@@ -24,7 +24,7 @@ class Api::V1::LevelsController < ApplicationController
             success: true,
             code: 200,
             data: {
-              Level: LevelSerializer.new( current_time_table.levels ).serialize
+              levels: LevelSerializer.new( current_time_table.levels ).serialize
             }
         }
     end

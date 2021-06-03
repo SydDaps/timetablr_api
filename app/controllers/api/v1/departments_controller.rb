@@ -1,5 +1,5 @@
 class Api::V1::DepartmentsController < ApplicationController
-    before_action :check_params, only: [:create]
+
 
     def create
         departments = []
@@ -13,7 +13,7 @@ class Api::V1::DepartmentsController < ApplicationController
             success: true,
             code: 200,
             data: {
-              department: DepartmentSerializer.new( departments ).serialize
+              departments: DepartmentSerializer.new( departments ).serialize
             },
         }
     end
@@ -25,22 +25,8 @@ class Api::V1::DepartmentsController < ApplicationController
             success: true,
             code: 200,
             data: {
-              department: DepartmentSerializer.new( current_time_table.departments.all ).serialize
+              departments: DepartmentSerializer.new( current_time_table.departments.all ).serialize
             },
         }
-    end
-
-
-    private
-    def check_params
-        if params[:departments].blank?
-            raise Exceptions::MissingParam, "Check Params name and code"
-        end
-       
-        params[:departments].each do |department|
-            if department[:name].blank? || department[:code].blank?
-                raise Exceptions::MissingParam, "Check Params name and code"
-            end
-        end
     end
 end
