@@ -6,7 +6,7 @@ class CourseSerializer < BaseSerializer
             code: resource.code,
             level: resource.level.code,
             department: resource.department.code,
-            time_tag: resource.time_tag.name,
+            time_tag: TimeTagSerializer.new( resource.time_tags ).serialize,
             lecturers: LecturerSerializer.new( resource.lecturers ).serialize
         }
 

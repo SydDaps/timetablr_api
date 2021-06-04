@@ -4,7 +4,20 @@ class Api::V1::CoursesController < ApplicationController
     courses = []
     Course.transaction do
       params[:courses].each do |course|
-        courses << CourseService::Create.call(course.merge(time_table: time_table))
+        department_id = course[:department_id]
+        course[:levels].each do |level|
+          level_id = level[:level_id]
+          level[:courses].each do |course|
+            
+            data = {
+              level_id: level_id,
+              department_id:  department_id,
+              time_table: time_table
+            }
+
+            courses << CourseService::Create.call(course.merge(data))
+          end
+        end
       end
     end
 
@@ -12,7 +25,7 @@ class Api::V1::CoursesController < ApplicationController
       success: true,
       code: 200,
       data: {
-        courses: CourseSerializer.new( courses.flatten ).serialize
+        courses: CourseSerializer.new( courses ).serialize
       }
   }
   end
@@ -25,5 +38,23 @@ class Api::V1::CoursesController < ApplicationController
         courses: CourseSerializer.new( current_time_table.courses ).serialize
       }
     }
+  end
+
+  def link_lecturers_tags
+    courses = []
+    Course.transaction do
+      params[:courses].each do |course|
+        courses << CourseService::LinkLecturerTag.call( course )
+      end
+
+      render json: {
+        success: true,
+        code: 200,
+        data: {
+          courses: CourseSerializer.new( courses ).serialize
+        }
+      }
+    end
+  
   end
 end

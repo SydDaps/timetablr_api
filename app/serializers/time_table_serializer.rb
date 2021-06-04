@@ -5,7 +5,7 @@ class TimeTableSerializer < BaseSerializer
             name: resource.name,
             kind: resource.kind,
             status: resource.status,
-            Days: DaySerializer.new(resource.days).serialize
+            days: DaySerializer.new(resource.days).serialize
         }
     end
 

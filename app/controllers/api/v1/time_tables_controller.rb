@@ -23,7 +23,7 @@ class  Api::V1::TimeTablesController < ApplicationController
       success: true,
       code: 200,
       data: {
-        time_tables: TimeTableSerializer.new(@current_user.time_tables).serialize
+        time_tables: TimeTableSerializer.new(@current_user.time_tables.order("updated_at DESC")).serialize
       },
     }
   end

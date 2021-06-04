@@ -8,10 +8,8 @@ module RoomService
         def call
             room = Room.find(@room_id)
 
-            @tags.each do |tag_id|
-                tag =TimeTag.find(tag_id)
-                room.time_tags << tag
-            end
+            tag =TimeTag.find(@tags)
+            room.time_tags << tag
             
             room
         end

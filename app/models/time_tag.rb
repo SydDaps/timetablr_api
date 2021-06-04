@@ -8,6 +8,7 @@ class TimeTag < ApplicationRecord
 
     has_and_belongs_to_many :days
     has_and_belongs_to_many :rooms
+    has_and_belongs_to_many :courses, dependent: :destroy
 
     validates :name, presence: { message: 'for time tag blank' }
     validates :duration, presence: { message: 'for time tag blank' }
