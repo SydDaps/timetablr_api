@@ -18,7 +18,7 @@ gem 'bcrypt', '~> 3.1.7'
 gem 'figaro', '~> 1.1', '>= 1.1.1'
 gem 'jwt', '~> 1.5', '>= 1.5.4'
 gem 'rack-cors'
-
+gem 'sidekiq', '~> 4.1', '>= 4.1.2'
 
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
