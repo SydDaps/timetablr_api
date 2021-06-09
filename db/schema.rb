@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_06_03_214741) do
+ActiveRecord::Schema.define(version: 2021_06_07_152653) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -24,6 +24,7 @@ ActiveRecord::Schema.define(version: 2021_06_03_214741) do
     t.datetime "updated_at", precision: 6, null: false
     t.uuid "department_id", null: false
     t.uuid "time_table_id", null: false
+    t.string "kind"
     t.index ["department_id"], name: "index_courses_on_department_id"
     t.index ["level_id"], name: "index_courses_on_level_id"
     t.index ["time_table_id"], name: "index_courses_on_time_table_id"
@@ -96,6 +97,32 @@ ActiveRecord::Schema.define(version: 2021_06_03_214741) do
     t.index ["time_table_id"], name: "index_levels_on_time_table_id"
   end
 
+  create_table "meet_times", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "time_tag_id"
+    t.time "start"
+    t.time "end"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["time_tag_id"], name: "index_meet_times_on_time_tag_id"
+  end
+
+  create_table "pairings", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "schedule_id"
+    t.uuid "course_id"
+    t.uuid "meet_time_id"
+    t.uuid "day_id"
+    t.uuid "room_id"
+    t.uuid "time_tag_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["course_id"], name: "index_pairings_on_course_id"
+    t.index ["day_id"], name: "index_pairings_on_day_id"
+    t.index ["meet_time_id"], name: "index_pairings_on_meet_time_id"
+    t.index ["room_id"], name: "index_pairings_on_room_id"
+    t.index ["schedule_id"], name: "index_pairings_on_schedule_id"
+    t.index ["time_tag_id"], name: "index_pairings_on_time_tag_id"
+  end
+
   create_table "room_categories", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name"
     t.uuid "time_table_id"
@@ -122,6 +149,15 @@ ActiveRecord::Schema.define(version: 2021_06_03_214741) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["room_id"], name: "index_rooms_time_tags_on_room_id"
     t.index ["time_tag_id"], name: "index_rooms_time_tags_on_time_tag_id"
+  end
+
+  create_table "schedules", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "time_table_id"
+    t.float "fitness"
+    t.integer "conflicts"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["time_table_id"], name: "index_schedules_on_time_table_id"
   end
 
   create_table "time_tables", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -167,9 +203,17 @@ ActiveRecord::Schema.define(version: 2021_06_03_214741) do
   add_foreign_key "days_time_tags", "time_tags"
   add_foreign_key "departments", "time_tables"
   add_foreign_key "levels", "time_tables"
+  add_foreign_key "meet_times", "time_tags"
+  add_foreign_key "pairings", "courses"
+  add_foreign_key "pairings", "days"
+  add_foreign_key "pairings", "meet_times"
+  add_foreign_key "pairings", "rooms"
+  add_foreign_key "pairings", "schedules"
+  add_foreign_key "pairings", "time_tags"
   add_foreign_key "room_categories", "time_tables"
   add_foreign_key "room_categories", "time_tags"
   add_foreign_key "rooms", "time_tables"
+  add_foreign_key "schedules", "time_tables"
   add_foreign_key "time_tables", "users"
   add_foreign_key "time_tags", "time_tables"
 end

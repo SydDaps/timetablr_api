@@ -15,6 +15,8 @@ Rails.application.routes.draw do
         resources :lecturers, only: [:create, :index]
         resources :levels, only: [:create, :index]
         resources :courses, only: [:create, :index]
+        resources :scheduler, only: [:create, :index]
+
         post '/courses_lecturers_tags', to: 'courses#link_lecturers_tags'
       end
     end
