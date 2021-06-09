@@ -1,2 +1,2 @@
-web:    rails s
-job: bundle exec sidekiq
+web: rails s
+job: bundle exec sidekiq -c 3
