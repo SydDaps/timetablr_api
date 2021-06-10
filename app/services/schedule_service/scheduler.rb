@@ -23,12 +23,15 @@ module ScheduleService
                     @time_table.courses.each do |course|
                         class_busy_times[course.department.code + course.level.code] = []
                     end
+
+                    counter = {}
                     
                     @time_table.time_tags.all.each do |tag|
+                        days_estimate = (tag.courses.count.to_f / 5).ceil + rand(6)
                         counter = 0
                         @meet_rooms[tag.id].each do |mr|
 
-                            if counter == 5
+                            if counter == days_estimate
                                 break
                             end
                             

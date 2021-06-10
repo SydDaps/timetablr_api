@@ -18,7 +18,7 @@ module Auth
 
         def decode_auth_token
            @decoded_token ||= Jwt::JsonWebToken.decode(http_auth_header)
-           raise Exceptions::UnauthorizedOperation.message("Session Expired sign in again") unless @decoded_token
+           raise Exceptions::ExpiredToken.message("Session Expired login again") unless @decoded_token
            @decoded_token
         end
 
