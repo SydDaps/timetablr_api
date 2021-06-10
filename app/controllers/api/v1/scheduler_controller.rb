@@ -16,6 +16,9 @@
 
 		ScheduleService::Scheduler.call(params)
 
+		current_time_table.status = "completed"
+		current_time_table.save!
+
 
 
 		#ScheduleJob.perform_later(time_table)
@@ -24,7 +27,7 @@
 			success: true,
 			code: 200,
 			data: {
-			data: current_time_table.schedules.all.map{ |p| PairingSerializer.new( p.pairings ).serialize }.flatten
+				schedules: current_time_table.schedules.all.map{ |p| PairingSerializer.new( p.pairings ).serialize }.flatten
 			}
 		}
 
