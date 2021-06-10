@@ -8,6 +8,8 @@ class PairingSerializer < BaseSerializer
             room: resource.room.name,
             day: resource.day.number,
             time_tag: resource.time_tag.name,
+            department_code: resource.course.department,
+            level: resource.course.level
         }
     end
 end
