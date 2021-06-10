@@ -1,4 +1,4 @@
-	class Api::V1::SchedulerController < ApplicationController
+class Api::V1::SchedulerController < ApplicationController
 
 	def create
 		current_time_table.schedules.destroy_all
@@ -16,11 +16,8 @@
 
 		ScheduleService::Scheduler.call(params)
 
-		current_time_table.status = "completed"
-		current_time_table.save!
-
-
-
+		current_time_table.update!(status: "completed")
+			
 		#ScheduleJob.perform_later(time_table)
 
 		render json: {
@@ -32,4 +29,19 @@
 		}
 
 	end
+
+	def index
+
+		unless current_time_table.status == "completed"
+			raise Exceptions::UnauthorizedOperation.message("TimeTable still pending, make sure to generate it first")
+		end
+
+		render json: {
+			success: true,
+			code: 200,
+			data: {
+				schedules: current_time_table.schedules.all.map{ |p| PairingSerializer.new( p.pairings ).serialize }.flatten
+			}
+		}
 	end
+end
