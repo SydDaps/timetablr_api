@@ -21,7 +21,7 @@ class TimeTag < ApplicationRecord
 
     def set_meet_times
         current_end_time = self.start_at + self.duration
-        while current_end_time < self.end_at
+        while current_end_time <= self.end_at
             
             self.meet_times.create!({
                 start: current_end_time - self.duration,
