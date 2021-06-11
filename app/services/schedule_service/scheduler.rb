@@ -31,9 +31,9 @@ module ScheduleService
                         counter = 0
                         @meet_rooms[tag.id].each do |mr|
 
-                            # if counter == 1
-                            #     break
-                            # end
+                            if counter == days_estimate
+                                break
+                            end
                             
                             time = mr[:meet_time]
                             room = mr[:room]
