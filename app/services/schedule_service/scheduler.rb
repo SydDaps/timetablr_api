@@ -30,7 +30,7 @@ module ScheduleService
                         days_estimate = (tag.courses.count.to_f / @time_table.days.count).ceil
                         counter = 0
 
-                        @meet_rooms.transform_values{ |v| v.shuffle }
+                        @meet_rooms = @meet_rooms.transform_values{ |v| v.shuffle }
                         @meet_rooms[tag.id].each do |mr|
 
                             if counter == days_estimate
