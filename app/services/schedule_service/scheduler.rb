@@ -27,13 +27,13 @@ module ScheduleService
                     counter = {}
                     
                     @time_table.time_tags.all.each do |tag|
-                        days_estimate = (tag.courses.count.to_f / 5).ceil + rand(6)
+                        days_estimate = (tag.courses.count.to_f / @time_table.days.count).ceil + rand(6)
                         counter = 0
                         @meet_rooms[tag.id].each do |mr|
 
-                            if counter == days_estimate
-                                break
-                            end
+                            # if counter == days_estimate
+                            #     break
+                            # end
                             
                             time = mr[:meet_time]
                             room = mr[:room]
