@@ -111,7 +111,7 @@ module ScheduleService
                 end                
             end
 
-            Schedule.all.each{ |s| s.calc_fitness }
+            @time_table.schedules.all.each{ |s| s.calc_fitness }
         end
     end
 end
