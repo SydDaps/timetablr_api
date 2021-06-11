@@ -24,16 +24,16 @@ module ScheduleService
                         class_busy_times[course.department.code + course.level.code] = []
                     end
 
-                    counter = {}
+                    
                     
                     @time_table.time_tags.all.each do |tag|
                         days_estimate = (tag.courses.count.to_f / @time_table.days.count).ceil + rand(6)
                         counter = 0
                         @meet_rooms[tag.id].each do |mr|
 
-                            # if counter == days_estimate
-                            #     break
-                            # end
+                            if counter == 1
+                                break
+                            end
                             
                             time = mr[:meet_time]
                             room = mr[:room]
@@ -104,7 +104,6 @@ module ScheduleService
                                 )
                                 counter += 1
                                 @courses[tag.id].delete(c_course)
-                                schedule.calc_fitness
                             end
                         end
                     end
