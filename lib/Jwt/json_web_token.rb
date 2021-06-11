@@ -1,6 +1,6 @@
 module Jwt
     class JsonWebToken
-        def self.encode(payload, exp =  60.seconds.from_now)
+        def self.encode(payload, exp =  2.days.from_now)
             payload[:exp] = exp.to_i
             JWT.encode(payload, ENV['TIMETABLR_API_SECRETE'])
         end
