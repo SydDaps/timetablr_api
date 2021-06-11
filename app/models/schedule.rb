@@ -29,6 +29,7 @@ class Schedule < ApplicationRecord
                     
                     if pairing.room.id == current_pairing.room.id
                         puts pairing.room.name
+                        puts current_pairing.room.name
                         puts "room ----------------- conflict"
                         puts "room ----------------- conflict"
                         puts "room ----------------- conflict"
