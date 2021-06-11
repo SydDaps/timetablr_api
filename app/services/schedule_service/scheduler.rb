@@ -29,6 +29,8 @@ module ScheduleService
                     @time_table.time_tags.all.each do |tag|
                         days_estimate = (tag.courses.count.to_f / @time_table.days.count).ceil
                         counter = 0
+                        
+                        @meet_times.transform_values{ |v| v.shuffle }
                         @meet_rooms[tag.id].each do |mr|
 
                             if counter == days_estimate
