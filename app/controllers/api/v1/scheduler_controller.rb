@@ -19,7 +19,6 @@ class Api::V1::SchedulerController < ApplicationController
 		current_time_table.update!(status: "completed")
 			
 		#ScheduleJob.perform_later(time_table)
-
 		render json: {
 			success: true,
 			code: 200,

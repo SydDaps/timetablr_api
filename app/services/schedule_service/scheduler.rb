@@ -31,9 +31,9 @@ module ScheduleService
                         counter = 0
                         @meet_rooms[tag.id].each do |mr|
 
-                            if counter == 1
-                                break
-                            end
+                            # if counter == 1
+                            #     break
+                            # end
                             
                             time = mr[:meet_time]
                             room = mr[:room]
@@ -45,8 +45,8 @@ module ScheduleService
                                 
                                 course[:course].lecturers.each do |lecturer|
                                     lecturer_busy_time[lecturer.id].each do |t|
-                                        start_at = (t.start ).between?(time.start, time.end - 5)
-                                        end_at = (t.end - 5).between?(time.start, time.end)
+                                        start_at = (time.start ).between?(t.start, t.end - 5)
+                                        end_at = (time.end - 5).between?(t.start, t.end)
 
                                         if start_at || end_at
                                             tester = false
@@ -64,8 +64,8 @@ module ScheduleService
                                 end
 
                                 class_busy_times[course[:course].department.code + course[:course].level.code].each do |t|
-                                    start_at = (t.start ).between?(time.start, time.end - 5)
-                                    end_at = (t.end - 5).between?(time.start, time.end)
+                                    start_at = (time.start ).between?(t.start, t.end - 5)
+                                    end_at = (time.end - 5).between?(t.start, t.end)
 
                                     if start_at || end_at
                                         tester = false
@@ -74,6 +74,7 @@ module ScheduleService
 
                                 end
 
+                                
                                 unless tester
                                     next
                                 end
