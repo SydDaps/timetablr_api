@@ -34,7 +34,6 @@ module ScheduleService
                             # if counter == 1
                             #     break
                             # end
-                            byebug
                             
                             time = mr[:meet_time]
                             room = mr[:room]
