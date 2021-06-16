@@ -21,7 +21,7 @@ module ScheduleService
                     
                     room_busy_times = {}
                     @time_table.rooms.each do |room|
-                        room_busy_time[room.id] = []
+                        room_busy_times[room.id] = []
                     end
 
                     class_busy_times = {}
