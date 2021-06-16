@@ -18,6 +18,11 @@ module ScheduleService
                     @time_table.lecturers.each do |lecturer|
                         lecturer_busy_time[lecturer.id] = []
                     end
+                    
+                    room_busy_times = {}
+                    @time_table.rooms.each do |room|
+                        room_busy_time[room.id] = []
+                    end
 
                     class_busy_times = {}
                     @time_table.courses.each do |course|
@@ -40,6 +45,15 @@ module ScheduleService
                             time = mr[:meet_time]
                             room = mr[:room]
                             c_course = nil
+
+                            room_busy_times[room.id].each do |r|
+                                start_at = (time.start ).between?(t.start, t.end - 5)
+                                end_at = (time.end - 5).between?(t.start, t.end)
+
+                                if start_at || end_at
+                                    next
+                                end
+                            end
                             
 
                             @courses[tag.id].each  do |course|
@@ -81,6 +95,7 @@ module ScheduleService
                                     next
                                 end
 
+                                
                                 if tester
                                     c_course = course
                                     class_busy_times[course[:course].department.code + course[:course].level.code] << mr[:meet_time]
@@ -88,7 +103,9 @@ module ScheduleService
                                     course[:course].lecturers.each do |l|
                                         lecturer_busy_time[l.id] << mr[:meet_time]
                                     end
-
+                                    
+                                    room_busy_times[room.id] << mr[:meet_time]
+                
                                     break
                                 end
                             end
