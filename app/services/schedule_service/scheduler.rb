@@ -46,7 +46,7 @@ module ScheduleService
                             room = mr[:room]
                             c_course = nil
 
-                            room_busy_times[room.id].each do |r|
+                            room_busy_times[room.id].each do |t|
                                 start_at = (time.start ).between?(t.start, t.end - 5)
                                 end_at = (time.end - 5).between?(t.start, t.end)
 
