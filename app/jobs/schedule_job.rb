@@ -1,5 +1,5 @@
 class ScheduleJob < ApplicationJob
-  	queue_as :high
+  	queue_as :default
 
 	def perform(time_table)
 
