@@ -38,6 +38,8 @@ module ScheduleService
                         @meet_rooms = @meet_rooms.transform_values{ |v| v.shuffle }
                         @meet_rooms[tag.id].each do |mr|
 
+                            room_occupied = false
+
                             if counter == days_estimate
                                 break
                             end
@@ -51,8 +53,15 @@ module ScheduleService
                                 end_at = (time.end - 5).between?(t.start, t.end)
 
                                 if start_at || end_at
-                                    next
+                                    
+                                    room_occupied = true
+
+                                    break
                                 end
+                            end
+
+                            if room_occupied
+                                next
                             end
                             
 
