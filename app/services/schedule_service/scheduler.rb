@@ -112,7 +112,6 @@ module ScheduleService
                     end
                 end                
             end
-
             @time_table.schedules.all.each{ |s| s.calc_fitness }
         end
     end

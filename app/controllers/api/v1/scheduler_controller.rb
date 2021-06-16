@@ -1,29 +1,14 @@
 class Api::V1::SchedulerController < ApplicationController
 
 	def create
-		current_time_table.schedules.destroy_all
-		meet_rooms = ScheduleService::MeetTimeRooms.call({time_table: current_time_table})
 
-		#share days to courses with respect to tags
-		days_courses_tags = ScheduleService::CoursesDays.call({time_table: current_time_table})
-
-		#Start Scheduling
-		params = {
-		courses: days_courses_tags,
-		meet_rooms: meet_rooms,
-		time_table: current_time_table
-		}
-
-		ScheduleService::Scheduler.call(params)
-
-		current_time_table.update!(status: "completed")
-			
-		#ScheduleJob.perform_later(time_table)
+		ScheduleJob.perform_later(current_time_table)
+		current_time_table.update!(status: "processing")
 		render json: {
 			success: true,
 			code: 200,
 			data: {
-				schedules: current_time_table.schedules.all.map{ |p| PairingSerializer.new( p.pairings ).serialize }.flatten
+				status: "processing"
 			}
 		}
 
@@ -31,7 +16,7 @@ class Api::V1::SchedulerController < ApplicationController
 
 	def index
 
-		unless current_time_table.status == "completed"
+		if current_time_table.status == "Pending" 
 			raise Exceptions::UnauthorizedOperation.message("TimeTable still pending, make sure to generate it first")
 		end
 

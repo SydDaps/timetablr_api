@@ -20,7 +20,7 @@ module ScheduleService
                 end
             end
 
-            meet_times.transform_values{ |v| v.shuffle }
+            meet_times
         end
     end
 end
