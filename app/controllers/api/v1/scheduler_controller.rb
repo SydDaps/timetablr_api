@@ -1,9 +1,10 @@
 class Api::V1::SchedulerController < ApplicationController
 
 	def create
-
-		ScheduleJob.perform_later(current_time_table)
 		current_time_table.update!(status: "processing")
+		
+		ScheduleJob.perform_later(current_time_table)
+		
 		render json: {
 			success: true,
 			code: 200,
