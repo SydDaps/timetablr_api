@@ -16,8 +16,11 @@ module UserService
                 password: @password,
                 password_confirmation: @password_confirmation
             )
-
-            Jwt::JsonWebToken.encode({user_id: user.id})
+            {
+                token: Jwt::JsonWebToken.encode({user_id: user.id}),
+                user: user
+            }
+            
         end
     end
 end
