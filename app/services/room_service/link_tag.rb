@@ -9,6 +9,7 @@ module RoomService
             room = Room.find(@room_id)
 
             tag =TimeTag.find(@tags)
+            
             room.time_tags << tag
             
             room

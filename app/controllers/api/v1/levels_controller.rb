@@ -28,4 +28,38 @@ class Api::V1::LevelsController < ApplicationController
             }
         }
     end
+
+    def update
+      level = Level.find(params[:id])
+
+      level.update!(update_params)
+
+      render json: {
+          success: true,
+          code: 200,
+          data: {
+            levels: LevelSerializer.new( current_time_table.levels ).serialize
+          },
+      }
+    end
+
+  def destroy
+    current_time_table.schedules.destroy_all
+    current_time_table.update!(status: "pending")
+    Level.destroy(params[:id])
+
+    render json: {
+      success: true,
+      code: 200,
+      data: {
+        levels: LevelSerializer.new( current_time_table.levels ).serialize
+      },
+    }
+  end
+
+  private
+
+  def update_params
+      params.permit(:level, :code)
+  end
 end

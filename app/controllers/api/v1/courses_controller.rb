@@ -20,14 +20,14 @@ class Api::V1::CoursesController < ApplicationController
         end
       end
     end
-
+    
     render json: {
       success: true,
       code: 200,
       data: {
         courses: CourseSerializer.new( courses ).serialize
       }
-  }
+    }
   end
 
   def index 
@@ -57,4 +57,52 @@ class Api::V1::CoursesController < ApplicationController
     end
   
   end
+
+  def update
+    course = Course.find(params[:id])
+    course.update(update_params)
+
+    course.lecturers.destroy_all
+    course.time_tags.destroy_all
+    
+    ff = {
+      course_id: course.id,
+      tags: params[:tags],
+      lecturers: params[:lecturers]
+    }
+
+    CourseService::LinkLecturerTag.call( ff )
+   
+
+    render json: {
+      success: true,
+      code: 200,
+      data: {
+        courses: CourseSerializer.new( current_time_table.courses ).serialize
+      }
+    }
+  end
+  
+  def destroy
+    current_time_table.schedules.destroy_all
+    current_time_table.update!(status: "pending")
+    Course.destroy(params[:id])
+
+    render json: {
+        success: true,
+        code: 200,
+        data: {
+          courses: CourseSerializer.new( current_time_table.courses ).serialize
+        }
+    }
+  end
+
+  private
+
+  def update_params
+    params.permit(:code, :name)
+  end
+
+
+
 end

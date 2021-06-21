@@ -12,15 +12,15 @@ Rails.application.routes.draw do
       resources :time_tables, only: [:create, :index]
       
       resources :time_tables do
-        resources :rooms, only: [:create, :index, :link_tags]
+        resources :rooms, only: [:create, :index, :update, :destroy]
         post '/rooms_tags', to: 'rooms#link_tags'
         
-        resources :time_tags, only: [:create, :index]
-        resources :departments, only: [:create, :index]
-        resources :lecturers, only: [:create, :index]
-        resources :levels, only: [:create, :index]
-        resources :courses, only: [:create, :index]
-        resources :scheduler, only: [:create, :index]
+        resources :time_tags, only: [:create, :index, :update, :destroy]
+        resources :departments, only: [:create, :index, :update, :destroy]
+        resources :lecturers, only: [:create, :index, :update, :destroy]
+        resources :levels, only: [:create, :index, :destroy]
+        resources :courses, only: [:create, :index, :update, :destroy]
+        resources :scheduler, only: [:create, :index, :update, :destroy]
 
         post '/courses_lecturers_tags', to: 'courses#link_lecturers_tags'
       end
