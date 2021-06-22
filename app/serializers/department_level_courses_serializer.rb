@@ -6,7 +6,7 @@ class DepartmentLevelCoursesSerializer < BaseSerializer
             code: resource.code,
             levels: LevelSerializer.new( resource.time_table.levels.all ).serialize.map{
                 |l| l.merge(
-                    courses: CourseSerializer.new( Level.find(l[:id]).courses.where(department_id: resource.id ) ).serialize
+                    courses: CourseSerializer.new( Level.find(l[:level_id]).courses.where(department_id: resource.id ) ).serialize
                 ) 
             }
         }
