@@ -43,7 +43,7 @@ class Api::V1::CoursesController < ApplicationController
   def link_lecturers_tags
     Course.transaction do
       params[:courses].each do |course|
-        courses << CourseService::LinkLecturerTag.call( course )
+        CourseService::LinkLecturerTag.call( course )
       end
 
       render json: {
