@@ -18,6 +18,8 @@ Rails.application.routes.draw do
         resources :time_tags, only: [:create, :index, :update, :destroy]
         resources :departments, only: [:create, :index, :update, :destroy]
         resources :lecturers, only: [:create, :index, :update, :destroy]
+        post '/lecturer_days', to: 'lecturers#link_days'
+
         resources :levels, only: [:create, :index, :destroy]
         resources :courses, only: [:create, :index, :update, :destroy]
         resources :scheduler, only: [:create, :index, :update, :destroy]

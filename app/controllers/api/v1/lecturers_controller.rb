@@ -13,7 +13,23 @@ class Api::V1::LecturersController < ApplicationController
             success: true,
             code: 200,
             data: {
-              lecturers: LecturerSerializer.new( time_table.lecturers ).serialize
+              lecturers: LecturerSerializer.new( current_time_table.lecturers ).serialize
+            }
+        }
+    end
+
+    def link_days
+        
+        params[:lecturers].each do |lecturer|
+            LecturerService::LinkDay.call(lecturer)
+        end
+        
+
+        render json: {
+            success: true,
+            code: 200,
+            data: {
+              lecturers: LecturerSerializer.new( current_time_table.lecturers ).serialize
             }
         }
     end

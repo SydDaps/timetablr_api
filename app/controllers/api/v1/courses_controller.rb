@@ -41,7 +41,6 @@ class Api::V1::CoursesController < ApplicationController
   end
 
   def link_lecturers_tags
-    courses = []
     Course.transaction do
       params[:courses].each do |course|
         courses << CourseService::LinkLecturerTag.call( course )

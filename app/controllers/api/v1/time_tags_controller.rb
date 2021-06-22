@@ -41,7 +41,7 @@ class Api::V1::TimeTagsController < ApplicationController
             success: true,
             code: 200,
             data: {
-              time_tag: TimeTagSerializer.new( current_time_table.time_tags ).serialize
+              time_tags: TimeTagSerializer.new( current_time_table.time_tags ).serialize
             },
         }
     end
@@ -55,7 +55,7 @@ class Api::V1::TimeTagsController < ApplicationController
         success: true,
         code: 200,
         data: {
-          time_tag: TimeTagSerializer.new( current_time_table.time_tags ).serialize
+          time_tags: TimeTagSerializer.new( current_time_table.time_tags ).serialize
         },
       }
     end
