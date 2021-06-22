@@ -40,7 +40,7 @@ class Api::V1::RoomsController < ApplicationController
             success: true,
             code: 200,
             data: {
-              rooms: RoomSerializer.new( rooms  ).serialize
+              rooms: RoomSerializer.new( current_time_table.rooms  ).serialize
             }
         }
     end
