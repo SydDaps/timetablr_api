@@ -3,7 +3,7 @@ module CourseService
         def initialize(params)
           @course_id = params[:course_id]
           @lecturers = params[:lecturers]
-          @time_tags = params[:tags]
+          @time_tags = params[:time_tags]
         end
 
 
@@ -15,7 +15,7 @@ module CourseService
             course = Course.find(@course_id)
 
             course.lecturers.destroy_all
-            
+
             course.time_tags.destroy_all
 
             course.lecturers << lecturers
