@@ -51,7 +51,7 @@ class Api::V1::CoursesController < ApplicationController
         success: true,
         code: 200,
         data: {
-          courses: CourseSerializer.new( courses ).serialize
+          courses: DepartmentLevelCoursesSerializer.new( current_time_table.departments ).serialize
         }
       }
     end
