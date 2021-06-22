@@ -7,7 +7,7 @@ module CourseService
           @level_id = params[:level_id]
           @time_table = params[:time_table]
           @elective = params[:elective]
-          @course_schedules = params[:course_schedules]
+          @course_schedules = params[:course_schedules] || []
         end
 
         def call
