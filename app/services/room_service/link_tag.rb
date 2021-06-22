@@ -7,6 +7,7 @@ module RoomService
 
         def call
             room = Room.find(@room_id)
+            room.time_tags.destroy_all
 
             tag =TimeTag.find(@tags)
             
