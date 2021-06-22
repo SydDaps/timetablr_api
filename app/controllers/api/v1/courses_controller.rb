@@ -20,7 +20,7 @@ class Api::V1::CoursesController < ApplicationController
         end
       end
     end
-    
+
     render json: {
       success: true,
       code: 200,
@@ -35,7 +35,7 @@ class Api::V1::CoursesController < ApplicationController
       success: true,
       code: 200,
       data: {
-        courses: CourseSerializer.new( current_time_table.courses ).serialize
+        courses: DepartmentLevelCoursesSerializer.new( current_time_table.departments ).serialize
       }
     }
   end
