@@ -9,10 +9,13 @@ module CourseService
 
         def call
             lecturers = Lecturer.find(@lecturers)
+
             time_tags = TimeTag.find(@time_tags)
+
             course = Course.find(@course_id)
-            
+
             course.lecturers.destroy_all
+            
             course.time_tags.destroy_all
 
             course.lecturers << lecturers
