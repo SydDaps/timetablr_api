@@ -12,7 +12,9 @@ class CourseSerializer < BaseSerializer
             lecturers: LecturerSerializer.new( resource.lecturers ).serialize.map{
                 |lecturer|  lecturer[:id]
             },
-            schedules: ScheduleSerializer.new( resource.course_schedules ).serialize
+            schedules: ScheduleSerializer.new( resource.course_schedules ).serialize.map{
+                |s| s[:day][:id]
+            }
         }
 
     end
