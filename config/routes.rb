@@ -20,7 +20,7 @@ Rails.application.routes.draw do
         resources :lecturers, only: [:create, :index, :update, :destroy]
         post '/lecturer_days', to: 'lecturers#link_days'
 
-        resources :levels, only: [:create, :index, :destroy]
+        resources :levels, only: [:create, :index, :destroy, :update]
         resources :courses, only: [:create, :index, :update, :destroy]
         resources :scheduler, only: [:create, :index, :update, :destroy]
 
