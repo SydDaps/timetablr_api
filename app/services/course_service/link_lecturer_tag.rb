@@ -4,6 +4,7 @@ module CourseService
           @course_id = params[:course_id]
           @lecturers = params[:lecturers]
           @time_tags = params[:time_tags]
+          @schedules = params[:schedules] || []
         end
 
 
@@ -21,7 +22,34 @@ module CourseService
             course.lecturers << lecturers
             course.time_tags << time_tags
 
-            course
+            @schedules.each do |cs|
+                
+                day = Day.find(cs)
+
+                schedule_time = ScheduleTime.create(
+                    start_at: parse_time("7:30am"),
+                    end_at: parse_time("7:30pm")
+                )
+
+                course_schedule = CourseSchedule.create(
+                    day: day,
+                    schedule_time: schedule_time
+                )
+
+                course.course_schedules << course_schedule
+               
+            end
+
+            
         end
+
+        private
+
+        def parse_time(time)
+            if time 
+                return Time.parse(time)
+            end
+        end
+
     end
 end

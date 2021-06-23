@@ -1,7 +1,7 @@
 module LecturerService
     class LinkDay < BaseService
         def initialize(params)
-            @lecture_schedules = params[:schedules]
+            @lecture_schedules = params[:schedules] || []
             @lecturer_id = params[:lecturer_id]
         end
 
