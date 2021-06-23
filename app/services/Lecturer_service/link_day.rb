@@ -1,21 +1,21 @@
 module LecturerService
     class LinkDay < BaseService
         def initialize(params)
-            @lecture_schedules = params[:lecture_schedules]
+            @lecture_schedules = params[:schedules]
             @lecturer_id = params[:lecturer_id]
         end
 
         def call
             lecturer = Lecturer.find(@lecturer_id)
-            
+
             Lecturer.transaction do
                 @lecture_schedules.each do |ls|
                 
-                    day = Day.find(ls[:day])
+                    day = Day.find(ls)
     
                     schedule_time = ScheduleTime.create(
-                        start_at: parse_time(ls[:start_at]),
-                        end_at: parse_time(ls[:end_at])
+                        start_at: parse_time("7:30am"),
+                        end_at: parse_time("7:30pm")
                     )
     
                     lecture_schedule = LectureSchedule.create(
