@@ -63,8 +63,8 @@ module ScheduleService
 
                     
                     
-                    @time_table.time_tags.all.each do |tag|
-                        days_estimate = (tag.courses.count.to_f / @time_table.days.count).ceil
+                    @time_table.time_tags.each do |tag|
+                        days_estimate = (tag.courses.count.to_f / @time_table.days.count).ceil + 2
                         counter = 0
 
                         # @meet_rooms = @meet_rooms.transform_values{ |v| v.shuffle }

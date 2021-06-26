@@ -24,13 +24,20 @@ class ScheduleJob < ApplicationJob
 			meet_rooms: meet_rooms,
 			time_table: time_table
 		}
-	
-		total_pairings = ScheduleService::Scheduler.call(params)
-
+		
+		total_pairings = 0
 		total_courses = 0
 		time_table.time_tags.each do |tag|
 			total_courses += tag.courses.count
 		end
+		while total_pairings !=  total_courses
+			total_pairings = ScheduleService::Scheduler.call(params)
+		end
+
+		
+		
+		
+			
 
 		
 
