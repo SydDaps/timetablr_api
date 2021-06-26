@@ -25,7 +25,19 @@ class ScheduleJob < ApplicationJob
 			time_table: time_table
 		}
 	
-		ScheduleService::Scheduler.call(params)
+		total_pairings = ScheduleService::Scheduler.call(params)
+
+		total_courses = 0
+		time_table.time_tags.each do |tag|
+			total_courses += tag.courses.count
+		end
+
+		
+
+		puts "-------------"
+		puts total_courses
+		puts total_pairings
+
 
 		time_table.update!(status: "completed")
 

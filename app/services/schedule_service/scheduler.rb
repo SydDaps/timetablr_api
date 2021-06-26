@@ -36,6 +36,7 @@ module ScheduleService
                         end
                     end
                 end
+                temp_meet_rooms = @meet_rooms
 
                 
 
@@ -67,20 +68,20 @@ module ScheduleService
                         counter = 0
 
                         # @meet_rooms = @meet_rooms.transform_values{ |v| v.shuffle }
-                        @meet_rooms[tag.id].each do |mr|
+                        @meet_rooms[tag.id].each do |temp_mr|
 
                             
                             here = false 
-                            # if counter == days_estimate
-                            #     break
-                            # end
+                            if counter == days_estimate
+                                break
+                            end
                             
-                            time = mr[:meet_time]
-                            room = mr[:room]
-                            fit_course = puts time.start
+                            temp_time = temp_mr[:meet_time]
+                            temp_room = temp_mr[:room]
+                            fit_course = nil
 
 
-                            unless busy_constraint_satisfied?(room_busy_times[room.id], time)
+                            unless busy_constraint_satisfied?(room_busy_times[temp_room.id], temp_time)
                                 next
                             end
                             
@@ -89,16 +90,16 @@ module ScheduleService
                             # custom Schedule data structure
                            
                             
-
+                            mr = nil
+                            
 
                             @courses[tag.id].each  do |course|
                                 lecturer_busy = false
 
-                                unless days_schedules[day.id].empty?
+                                if days_schedules[day.id].empty? == false
                                
                                     here = true
-                                    puts "-----------------herrrrr"
-                                    puts day.name
+                                    
                                  
                                     # @courses[tag.id].insert(
                                     #     0,
@@ -106,6 +107,13 @@ module ScheduleService
                                     # )
 
                                     course = days_schedules[day.id].first
+                                    mr = @meet_rooms[course[:time_tag].id].shuffle.first
+                                    time = mr[:meet_time]
+                                    room = mr[:room]
+                                else
+                                    mr = temp_mr
+                                    time = temp_time
+                                    room = temp_room
                                 end
 
                                 
@@ -142,7 +150,7 @@ module ScheduleService
                                 
                                 scheduled_time = ScheduleTime.create(
                                     start: mr[:meet_time].start,
-                                    end: mr[:meet_time].end + 1.5.hour
+                                    end: mr[:meet_time].end
                                 )
                                 class_busy_times[course[:course].department.id + course[:course].level.id].push(
                                     {
@@ -184,7 +192,13 @@ module ScheduleService
                 end                
             end
 
-            @time_table.schedules.all.each{ |s| s.calc_fitness }
+            total_pairings = 0
+            @time_table.schedules.all.each do  |s| 
+                s.calc_fitness 
+                total_pairings += s.pairings.count
+            end
+
+            total_pairings
         end
 
 
