@@ -6,6 +6,7 @@ class Day < ApplicationRecord
     has_and_belongs_to_many :courses, dependent: :destroy
 
     has_many :schedules, through: :pairings
+    has_many :lecture_schedules
 
     validates :name, presence: { message: 'for Day blank' }
     validates :number, presence: { message: 'for Day blank' }

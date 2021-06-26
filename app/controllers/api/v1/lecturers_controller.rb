@@ -21,7 +21,7 @@ class Api::V1::LecturersController < ApplicationController
     def link_days
         
         params[:lecturers].each do |lecturer|
-            LecturerService::LinkDay.call(lecturer)
+            LecturerService::LinkDay.call(lecturer.merge(time_table: current_time_table))
         end
         
 

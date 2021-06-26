@@ -9,6 +9,8 @@ class TimeTable < ApplicationRecord
     has_many :levels, dependent: :destroy
     has_many :courses, dependent: :destroy
     has_many :schedules, dependent: :destroy
+    has_many :course_schedules
+    has_many :lecture_schedules
 
     has_and_belongs_to_many :lecturers
 

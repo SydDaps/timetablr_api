@@ -22,8 +22,9 @@ class Schedule < ApplicationRecord
                 current_pairing = pairings[index]
                 next if pairing.id == current_pairing.id
 
-                start_at = (current_pairing.meet_time.start).between?(meet_time.start, meet_time.end - 5.minutes)
-                end_at = (current_pairing.meet_time.end - 5.minutes).between?(meet_time.start, meet_time.end)
+                start_at = (meet_time.start).between?(current_pairing.meet_time.start, current_pairing.meet_time.end - 5.minutes)
+                end_at = (meet_time.end - 5.minutes).between?(current_pairing.meet_time.start, current_pairing.meet_time.end)
+
 
                 if start_at || end_at
                     
@@ -50,6 +51,7 @@ class Schedule < ApplicationRecord
                         end
                     end
 
+                    
 
                     if pairing.course.department == current_pairing.course.department
                         if pairing.course.level == current_pairing.course.level

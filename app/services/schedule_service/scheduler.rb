@@ -9,9 +9,40 @@ module ScheduleService
 
         def call
             Schedule.transaction  do
+                days_schedules = {}
+                @time_table.days.each do |day|
+                    days_schedules[day.id] = []
+                end
+                
+
+                @time_table.lecturers.each do |lecturer|
+                    unless lecturer.lecture_schedules.empty?
+                        
+                        total = lecturer.lecture_schedules.count
+                        lecturer_courses = []
+                        lecturer.courses.where({time_table_id: @time_table.id}).each do |course|
+                            course.time_tags.each{ |l| lecturer_courses.push([l.id, course])}
+                        end
+                        days_courses =  lecturer_courses.count / total.to_f 
+                        lecturer_courses = lecturer_courses.shuffle.each_slice(days_courses.ceil).to_a
+                        lecturer.lecture_schedules.each_with_index do |ls, i|
+                            lecturer_courses[i].each do |lc|
+                                days_schedules[ls.day.id].push(
+                                    {time_tag: TimeTag.find(lc.first),course: lc.last}
+                                )
+                                @courses[lc.first].delete({time_tag: TimeTag.find(lc.first),course: lc.last})
+                                
+                            end
+                        end
+                    end
+                end
+
+                
+
+                
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
 
                 @time_table.days.each do |day|
-
                     schedule = @time_table.schedules.create!
 
                     lecturer_busy_time = {}
@@ -26,7 +57,7 @@ module ScheduleService
 
                     class_busy_times = {}
                     @time_table.courses.each do |course|
-                        class_busy_times[course.department.code + course.level.code] = []
+                        class_busy_times[course.department.id + course.level.id] = []
                     end
 
                     
@@ -35,110 +66,158 @@ module ScheduleService
                         days_estimate = (tag.courses.count.to_f / @time_table.days.count).ceil
                         counter = 0
 
-                        @meet_rooms = @meet_rooms.transform_values{ |v| v.shuffle }
+                        # @meet_rooms = @meet_rooms.transform_values{ |v| v.shuffle }
                         @meet_rooms[tag.id].each do |mr|
 
-                            room_occupied = false
-
-                            if counter == days_estimate
-                                break
-                            end
+                            
+                            here = false 
+                            # if counter == days_estimate
+                            #     break
+                            # end
                             
                             time = mr[:meet_time]
                             room = mr[:room]
-                            c_course = nil
+                            fit_course = puts time.start
 
-                            room_busy_times[room.id].each do |t|
-                                start_at = (time.start ).between?(t.start, t.end - 5)
-                                end_at = (time.end - 5).between?(t.start, t.end)
 
-                                if start_at || end_at
-                                    
-                                    room_occupied = true
-
-                                    break
-                                end
-                            end
-
-                            if room_occupied
+                            unless busy_constraint_satisfied?(room_busy_times[room.id], time)
                                 next
                             end
                             
 
+                            # share lecturer courses to days
+                            # custom Schedule data structure
+                           
+                            
+
+
                             @courses[tag.id].each  do |course|
-                                tester = true
+                                lecturer_busy = false
+
+                                unless days_schedules[day.id].empty?
+                               
+                                    here = true
+                                    puts "-----------------herrrrr"
+                                    puts day.name
+                                 
+                                    # @courses[tag.id].insert(
+                                    #     0,
+                                    #     days_schedules[day.id][tag.id].first
+                                    # )
+
+                                    course = days_schedules[day.id].first
+                                end
+
+                                
                                 
                                 course[:course].lecturers.each do |lecturer|
-                                    lecturer_busy_time[lecturer.id].each do |t|
-                                        start_at = (time.start ).between?(t.start, t.end - 5)
-                                        end_at = (time.end - 5).between?(t.start, t.end)
-
-                                        if start_at || end_at
-                                            tester = false
-                                            break
-                                        end
-                                    end
-
-                                    unless tester
+                                    unless busy_constraint_satisfied?(lecturer_busy_time[lecturer.id], time)
+                                        lecturer_busy = true
                                         break
                                     end
                                 end
 
-                                unless tester
-                                    next
-                                end
-
-                                class_busy_times[course[:course].department.code + course[:course].level.code].each do |t|
-                                    start_at = (time.start ).between?(t.start, t.end - 5)
-                                    end_at = (time.end - 5).between?(t.start, t.end)
-
-                                    if start_at || end_at
-                                        tester = false
-                                        break
-                                    end
-
-                                end
-
+                                next if lecturer_busy
                                 
-                                unless tester
-                                    next
-                                end
 
-                                
-                                if tester
-                                    c_course = course
-                                    class_busy_times[course[:course].department.code + course[:course].level.code] << mr[:meet_time]
-                                    
-                                    course[:course].lecturers.each do |l|
-                                        lecturer_busy_time[l.id] << mr[:meet_time]
-                                    end
-                                    
-                                    room_busy_times[room.id] << mr[:meet_time]
-                
+                                class_busy = false
+
+                                unless busy_constraint_satisfied?(class_busy_times[course[:course].department.id + course[:course].level.id], time, course[:course])
+                                    class_busy = true
                                     break
                                 end
+
+                                next if class_busy
+
+                                
+
+                                
+                                
+
+                                
+                                
+                                fit_course = course
+
+                                # Adding an hour break to each students class before next class
+                                
+                                scheduled_time = ScheduleTime.create(
+                                    start: mr[:meet_time].start,
+                                    end: mr[:meet_time].end + 1.5.hour
+                                )
+                                class_busy_times[course[:course].department.id + course[:course].level.id].push(
+                                    {
+                                        time: scheduled_time,
+                                        course_kind: fit_course[:course].kind
+                                    }
+                                ) 
+                                
+                                course[:course].lecturers.each do |l|
+                                    lecturer_busy_time[l.id] << {time: mr[:meet_time]}
+                                end
+                                
+                                room_busy_times[room.id] << {time: mr[:meet_time]}
+            
+                                break
+                            
                             end
                             
-                            unless c_course
+                            unless fit_course
                                 next
                             else
                                 
                                 Pairing.create!(
                                     schedule_id: schedule.id,
-                                    course_id: c_course[:course].id,
-                                    time_tag_id: c_course[:time_tag].id,
+                                    course_id: fit_course[:course].id,
+                                    time_tag_id: fit_course[:time_tag].id,
                                     meet_time_id: mr[:meet_time].id,
                                     room_id: mr[:room].id,
                                     day_id: day.id
                                 )
                                 counter += 1
-                                @courses[tag.id].delete(c_course)
+                               
+                                @courses[tag.id].delete(fit_course)
+                                
+                                days_schedules[day.id].delete(fit_course)
                             end
                         end
                     end
                 end                
             end
+
             @time_table.schedules.all.each{ |s| s.calc_fitness }
+        end
+
+
+        def busy_constraint_satisfied?(entity, time, type = nil)
+            # an entity can be anything i am trying to track if busy or not busy
+            # logic is to check if the time currently in the tracker ds clashes with the new incoming time
+
+
+
+            entity.each do |t|
+                start_at = (t[:time].start ).between?(time.start, time.end - 5)
+                end_at = (t[:time].end - 5).between?(time.start, time.end)
+
+                if start_at || end_at
+
+                    if type.class == Course
+                        if t[:course_kind] == "elective" && type.kind == "elective"
+                           
+                            elective_start = (time.start + 5).between?(t[:time].start, t[:time].end)
+                            elective_end = (time.end - 5).between?(t[:time].start, t[:time].end)
+
+                            if elective_start && elective_end
+                                return true
+                            end
+                        end
+                    end
+             
+                    return false
+                end
+
+            end
+
+            return true
         end
     end
 end
