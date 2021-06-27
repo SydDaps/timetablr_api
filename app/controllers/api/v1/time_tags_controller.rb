@@ -34,8 +34,13 @@ class Api::V1::TimeTagsController < ApplicationController
         if params[:duration]
             duration = params[:duration] = params[:duration].first.hours + params[:duration].second.minutes
         end
-
+        current_time_table.schedules.destroy_all
+        current_time_table.update!(status: "pending")
+       
+        time_tag.meet_times.destroy_all
         time_tag.update!(update_params.merge(duration: duration))
+        
+        time_tag.set_meet_times
   
         render json: {
             success: true,

@@ -8,15 +8,12 @@ module ScheduleService
         def call
             courses_tags = []
 
-            total_courses = 0
-            @time_table.time_tags.each do |tag|
-                total_courses += tag.courses.count
-            end
+            
             courses_tags = {}
            
             @time_table.time_tags.each do |tag|
                 courses_tags[tag.id] = []
-                courses_tags[tag.id] = tag.courses.order("code ASC").map{ |course| { time_tag: tag, course: course} }
+                courses_tags[tag.id] = tag.courses.map{ |course| { time_tag: tag, course: course} }
                 
             end
             

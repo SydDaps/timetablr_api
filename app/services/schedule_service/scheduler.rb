@@ -62,9 +62,14 @@ module ScheduleService
                     end
 
                     
-                    
-                    @time_table.time_tags.each do |tag|
-                        days_estimate = (tag.courses.count.to_f / @time_table.days.count).ceil + 2
+                    puts day.name
+                    @time_table.time_tags.order(duration: :asc).each do |tag|
+                     
+                        total_courses = 0
+                        @time_table.time_tags.each do |tag|
+                            total_courses += tag.courses.count
+                        end
+                        days_estimate = (total_courses / @time_table.days.count - 1).ceil
                         counter = 0
 
                         # @meet_rooms = @meet_rooms.transform_values{ |v| v.shuffle }
@@ -79,7 +84,7 @@ module ScheduleService
                             temp_time = temp_mr[:meet_time]
                             temp_room = temp_mr[:room]
                             fit_course = nil
-
+                            
 
                             unless busy_constraint_satisfied?(room_busy_times[temp_room.id], temp_time)
                                 next
@@ -94,6 +99,7 @@ module ScheduleService
                             
 
                             @courses[tag.id].each  do |course|
+                                
                                 lecturer_busy = false
 
                                 if days_schedules[day.id].empty? == false
@@ -211,14 +217,16 @@ module ScheduleService
             entity.each do |t|
                 start_at = (t[:time].start ).between?(time.start, time.end - 5)
                 end_at = (t[:time].end - 5).between?(time.start, time.end)
+                start2 = (time.start ).between?(t[:time].start, t[:time].end - 5)
+                end2 = (time.start ).between?(t[:time].start, t[:time].end - 5)
 
-                if start_at || end_at
+                if start_at || end_at || start2 || end2
 
                     if type.class == Course
                         if t[:course_kind] == "elective" && type.kind == "elective"
                            
-                            elective_start = (time.start + 5).between?(t[:time].start, t[:time].end)
-                            elective_end = (time.end - 5).between?(t[:time].start, t[:time].end)
+                            elective_start = (time.start ).between?(t[:time].start, t[:time].end - 5)
+                            elective_end = (time.start ).between?(t[:time].start, t[:time].end - 5)
 
                             if elective_start && elective_end
                                 return true

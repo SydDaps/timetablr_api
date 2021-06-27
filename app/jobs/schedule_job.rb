@@ -30,9 +30,9 @@ class ScheduleJob < ApplicationJob
 		time_table.time_tags.each do |tag|
 			total_courses += tag.courses.count
 		end
-		while total_pairings !=  total_courses
+		# while total_pairings !=  total_courses
 			total_pairings = ScheduleService::Scheduler.call(params)
-		end
+		# end
 
 		
 		
@@ -44,6 +44,8 @@ class ScheduleJob < ApplicationJob
 		puts "-------------"
 		puts total_courses
 		puts total_pairings
+
+		
 
 
 		time_table.update!(status: "completed")
