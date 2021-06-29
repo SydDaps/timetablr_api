@@ -9,7 +9,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :token, only: [:create]
       resources :users, only: [:create]
-      resources :time_tables, only: [:create, :index]
+      resources :time_tables, only: [:create, :index, :show]
       
       resources :time_tables do
         resources :rooms, only: [:create, :index, :update, :destroy]

@@ -49,20 +49,24 @@ module ScheduleService
                 
 
                 days_schedules.each do |ds|
-                    @schedule = @time_table.schedules.create!
+                    
                     @day = Day.find(ds.first)
 
 
                     @time_table.time_tags.each do |tag|
+                        
+                        if days_schedules[@day.id][tag.id].empty?
+                            next
+                        end
+
+                        @schedule =  @time_table.schedules.joins(:pairings).where(pairings: {day_id: @day.id}).first || @time_table.schedules.create!  
 
                         @meet_rooms[tag.id].each do |mr|
                             @mr = mr
                             @time = mr[:meet_time]
                             @room = mr[:room]
 
-                            if days_schedules[@day.id][tag.id].empty?
-                                break
-                            end
+                            
 
 
                             days_schedules[@day.id][tag.id].each do |course|
@@ -185,7 +189,7 @@ module ScheduleService
 
                     if type.class == Course
                         if t.course_kind == "elective" && type.kind == "elective"
-                           
+
                             elective_start = (@time.start ).between?(t.schedule_time.start, t.schedule_time.end - 5)
                             elective_end = (@time.start ).between?(t.schedule_time.start, t.schedule_time.end - 5)
 
@@ -216,7 +220,7 @@ module ScheduleService
                 return "room_busy"
             end
 
-            unless busy_constraint_satisfied?(@time_table.class_time_trackers.where(level_id: @course[:course].level.id, department_id: @course[:course].department.id, day_id: @day.id ))
+            unless busy_constraint_satisfied?(@time_table.class_time_trackers.where(level_id: @course[:course].level.id, department_id: @course[:course].department.id, day_id: @day.id ), @course[:course])
                 return "class_busy"
             end
 

@@ -55,13 +55,13 @@ class Schedule < ApplicationRecord
 
                     if pairing.course.department == current_pairing.course.department
                         if pairing.course.level == current_pairing.course.level
-                            #unless pairing.course.type == "elective" &&  current_pairing.course.type == "elective" do
+                            unless pairing.course.kind == "elective" &&  current_pairing.course.kind == "elective"
                                 puts "level --- conflicts"
                                 puts "level --- conflicts"
                                 puts "level --- conflicts"
                                 puts "level --- conflicts"
                                 conflicts += 1
-                            #end
+                            end
                         end
                     end
                 end

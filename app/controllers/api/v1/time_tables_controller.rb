@@ -27,4 +27,17 @@ class  Api::V1::TimeTablesController < ApplicationController
       },
     }
   end
+
+  def show
+    time_table = TimeTable.find(params[:id])
+    render json: {
+      success: true,
+      code: 200,
+      data: {
+        time_tables: TimeTableSerializer.new( time_table ).serialize
+      },
+    }
+  end
+
+
 end
