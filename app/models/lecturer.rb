@@ -6,6 +6,7 @@ class Lecturer < ApplicationRecord
     has_and_belongs_to_many :days, dependent: :destroy
 
     has_many :lecture_schedules
+    has_many :lecturer_time_trackers
 
     
     validates :name, presence: { message: 'for lecturer blank' }

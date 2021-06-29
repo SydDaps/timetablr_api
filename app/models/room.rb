@@ -4,6 +4,7 @@ class Room < ApplicationRecord
 
     has_many :pairings
     has_many :schedules, through: :pairings, dependent: :destroy
+    has_many :room_time_trackers
 
     validates :name, presence: { message: 'for time table blank' }
     validates :capacity, presence: { message: 'for time table blank' }

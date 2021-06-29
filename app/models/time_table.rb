@@ -11,6 +11,9 @@ class TimeTable < ApplicationRecord
     has_many :schedules, dependent: :destroy
     has_many :course_schedules
     has_many :lecture_schedules
+    has_many :lecturer_time_trackers
+    has_many :class_time_trackers
+    has_many :room_time_trackers
 
     has_and_belongs_to_many :lecturers
 

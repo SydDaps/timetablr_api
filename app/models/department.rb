@@ -1,5 +1,6 @@
 class Department < ApplicationRecord
     belongs_to :time_table
+    has_many :class_time_trackers
 
     has_many :courses, dependent: :destroy
 

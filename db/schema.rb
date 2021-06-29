@@ -10,11 +10,25 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_06_25_032729) do
+ActiveRecord::Schema.define(version: 2021_06_29_044131) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
+
+  create_table "class_time_trackers", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "day_id"
+    t.uuid "time_table_id"
+    t.uuid "schedule_time_id"
+    t.uuid "level_id"
+    t.uuid "department_id"
+    t.string "course_kind"
+    t.index ["day_id"], name: "index_class_time_trackers_on_day_id"
+    t.index ["department_id"], name: "index_class_time_trackers_on_department_id"
+    t.index ["level_id"], name: "index_class_time_trackers_on_level_id"
+    t.index ["schedule_time_id"], name: "index_class_time_trackers_on_schedule_time_id"
+    t.index ["time_table_id"], name: "index_class_time_trackers_on_time_table_id"
+  end
 
   create_table "course_schedules", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "schedule_time_id"
@@ -93,6 +107,17 @@ ActiveRecord::Schema.define(version: 2021_06_25_032729) do
     t.index ["time_table_id"], name: "index_lecture_schedules_on_time_table_id"
   end
 
+  create_table "lecturer_time_trackers", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "day_id"
+    t.uuid "time_table_id"
+    t.uuid "schedule_time_id"
+    t.uuid "lecturer_id"
+    t.index ["day_id"], name: "index_lecturer_time_trackers_on_day_id"
+    t.index ["lecturer_id"], name: "index_lecturer_time_trackers_on_lecturer_id"
+    t.index ["schedule_time_id"], name: "index_lecturer_time_trackers_on_schedule_time_id"
+    t.index ["time_table_id"], name: "index_lecturer_time_trackers_on_time_table_id"
+  end
+
   create_table "lecturers", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name"
     t.string "email"
@@ -153,6 +178,19 @@ ActiveRecord::Schema.define(version: 2021_06_25_032729) do
     t.uuid "time_tag_id"
     t.index ["time_table_id"], name: "index_room_categories_on_time_table_id"
     t.index ["time_tag_id"], name: "index_room_categories_on_time_tag_id"
+  end
+
+  create_table "room_time_trackers", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "day_id"
+    t.uuid "time_table_id"
+    t.uuid "schedule_time_id"
+    t.uuid "room_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["day_id"], name: "index_room_time_trackers_on_day_id"
+    t.index ["room_id"], name: "index_room_time_trackers_on_room_id"
+    t.index ["schedule_time_id"], name: "index_room_time_trackers_on_schedule_time_id"
+    t.index ["time_table_id"], name: "index_room_time_trackers_on_time_table_id"
   end
 
   create_table "rooms", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -220,6 +258,11 @@ ActiveRecord::Schema.define(version: 2021_06_25_032729) do
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
+  add_foreign_key "class_time_trackers", "days"
+  add_foreign_key "class_time_trackers", "departments"
+  add_foreign_key "class_time_trackers", "levels"
+  add_foreign_key "class_time_trackers", "schedule_times"
+  add_foreign_key "class_time_trackers", "time_tables"
   add_foreign_key "course_schedules", "courses"
   add_foreign_key "course_schedules", "days"
   add_foreign_key "course_schedules", "schedule_times"
@@ -239,6 +282,10 @@ ActiveRecord::Schema.define(version: 2021_06_25_032729) do
   add_foreign_key "lecture_schedules", "lecturers"
   add_foreign_key "lecture_schedules", "schedule_times"
   add_foreign_key "lecture_schedules", "time_tables"
+  add_foreign_key "lecturer_time_trackers", "days"
+  add_foreign_key "lecturer_time_trackers", "lecturers"
+  add_foreign_key "lecturer_time_trackers", "schedule_times"
+  add_foreign_key "lecturer_time_trackers", "time_tables"
   add_foreign_key "levels", "time_tables"
   add_foreign_key "meet_times", "time_tags"
   add_foreign_key "pairings", "courses"
@@ -249,6 +296,10 @@ ActiveRecord::Schema.define(version: 2021_06_25_032729) do
   add_foreign_key "pairings", "time_tags"
   add_foreign_key "room_categories", "time_tables"
   add_foreign_key "room_categories", "time_tags"
+  add_foreign_key "room_time_trackers", "days"
+  add_foreign_key "room_time_trackers", "rooms"
+  add_foreign_key "room_time_trackers", "schedule_times"
+  add_foreign_key "room_time_trackers", "time_tables"
   add_foreign_key "rooms", "time_tables"
   add_foreign_key "schedules", "time_tables"
   add_foreign_key "time_tables", "users"
