@@ -49,9 +49,8 @@ module ScheduleService
                 
 
                 days_schedules.each do |ds|
-                    
+     
                     @day = Day.find(ds.first)
-
 
                     @time_table.time_tags.each do |tag|
                         
@@ -65,9 +64,6 @@ module ScheduleService
                             @mr = mr
                             @time = mr[:meet_time]
                             @room = mr[:room]
-
-                            
-
 
                             days_schedules[@day.id][tag.id].each do |course|
                                 @course = course 
@@ -83,34 +79,23 @@ module ScheduleService
                                     next
                                 end
                                 
-                                
                                 add_pairing()
                                 
-
                                 days_schedules[@day.id][tag.id].delete(course)
 
                                 break
-        
                             end
                         end
                     end
-                    
-                    
                 end
-                
-                
-             
-                
-                
-               
-                
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
-
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
                 @time_table.days.each do |day|
                     @day = day
                     @schedule =  @time_table.schedules.joins(:pairings).where(pairings: {day_id: @day.id}).first || @time_table.schedules.create!        
                     
                     @time_table.time_tags.order(duration: :desc).each do |tag|
+
+                        
                         @tag = tag
                         
                         days_estimate = (@tag.courses.count.to_f / (@time_table.days.count - 1)).ceil
@@ -140,8 +125,11 @@ module ScheduleService
                                 
 
                                 constraints = check_constraints()
-                                if constraints == "class_busy" || constraints == "lecturer_busy"
-                                  
+                                if constraints == "class_busy" || constraints == "lecturer_busy" 
+                                    next
+
+                                elsif constraints == "scheduled_already"
+                                    puts "already scheduled"
                                     next
                                 elsif constraints == "room_busy"
                                     
@@ -156,14 +144,8 @@ module ScheduleService
 
                                 
                             end
-                            
-                            
-
-                            
                         end
                     end
-
-                    
                 end                
             end
 
@@ -186,7 +168,6 @@ module ScheduleService
                 end2 = (@time.start ).between?(t.schedule_time.start, t.schedule_time.end - 5)
 
                 if start_at || end_at || start2 || end2
-
                     if type.class == Course
                         if t.course_kind == "elective" && type.kind == "elective"
 
@@ -198,6 +179,8 @@ module ScheduleService
                             end
                         end
                     end
+
+
              
                     return false
                 end
@@ -209,6 +192,7 @@ module ScheduleService
 
 
         def  check_constraints()
+            
             @course[:course].lecturers.each do |lecturer|
                 unless busy_constraint_satisfied?(@time_table.lecturer_time_trackers.where(lecturer_id: lecturer.id, day_id: @day.id))
                     return "lecturer_busy"
@@ -223,6 +207,16 @@ module ScheduleService
             unless busy_constraint_satisfied?(@time_table.class_time_trackers.where(level_id: @course[:course].level.id, department_id: @course[:course].department.id, day_id: @day.id ), @course[:course])
                 return "class_busy"
             end
+
+            @schedule.pairings.each do |pairing|
+                if pairing.course == @course[:course]
+                    if pairing.time_tag.name.downcase == @course[:time_tag].name.downcase
+                        return "scheduled_already"
+                    end
+                end
+            end
+
+            
 
             true
         end
@@ -242,6 +236,30 @@ module ScheduleService
                 time_table: @time_table,
                 schedule_time: scheduled_time
             )
+
+            department = @course[:course].department
+            if department.name.downcase == "general"
+
+                @time_table.departments.each do |dept|
+                    ClassTimeTracker.create!(
+                        level: @course[:course].level,
+                        department: dept,
+                        course_kind: @course[:course].kind,
+                        day: @day,
+                        time_table: @time_table,
+                        schedule_time: scheduled_time
+                    )
+                end
+            else 
+                ClassTimeTracker.create!(
+                    level: @course[:course].level,
+                    department: @course[:course].department,
+                    course_kind: @course[:course].kind,
+                    day: @day,
+                    time_table: @time_table,
+                    schedule_time: scheduled_time
+                )
+            end
 
             @course[:course].lecturers.each do |l|
                 LecturerTimeTracker.create!(
@@ -271,12 +289,6 @@ module ScheduleService
             if @tag
                 @courses[@tag.id].delete(@course)
             end
-
-            
-            
-            
-                
-            
         end
     end
 end

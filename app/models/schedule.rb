@@ -52,8 +52,9 @@ class Schedule < ApplicationRecord
                     end
 
                     
-
-                    if pairing.course.department == current_pairing.course.department
+                    same_department = pairing.course.department == current_pairing.course.department
+                    general_department = pairing.course.department.name.downcase  == "general"
+                    if same_department || general_department
                         if pairing.course.level == current_pairing.course.level
                             unless pairing.course.kind == "elective" &&  current_pairing.course.kind == "elective"
                                 puts "level --- conflicts"
