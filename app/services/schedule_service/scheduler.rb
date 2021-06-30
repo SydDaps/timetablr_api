@@ -60,7 +60,7 @@ module ScheduleService
                         end
 
                         @schedule =  @time_table.schedules.joins(:pairings).where(pairings: {day_id: @day.id}).first || @time_table.schedules.create!  
-                        @meet_rooms = @meet_rooms.transform_values{ |v| v.shuffle }
+                        
                         @meet_rooms[tag.id].each do |mr|
                             @mr = mr
                             @time = mr[:meet_time]
