@@ -231,7 +231,7 @@ module ScheduleService
         def add_pairing()
             scheduled_time = ScheduleTime.create(
                 start: @mr[:meet_time].start,
-                end: @mr[:meet_time].end + 1.hour
+                end: @mr[:meet_time].end
             )
 
             ClassTimeTracker.create!(
