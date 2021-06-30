@@ -60,7 +60,7 @@ module ScheduleService
                         end
 
                         @schedule =  @time_table.schedules.joins(:pairings).where(pairings: {day_id: @day.id}).first || @time_table.schedules.create!  
-                        
+                        @meet_rooms = @meet_rooms.transform_values{ |v| v.shuffle }
                         @meet_rooms[tag.id].each do |mr|
                             @mr = mr
                             @time = mr[:meet_time]
@@ -113,7 +113,7 @@ module ScheduleService
                     @time_table.time_tags.order(duration: :desc).each do |tag|
                         @tag = tag
                         
-                        days_estimate = (@tag.courses.count.to_f / (@time_table.days.count)).ceil
+                        days_estimate = (@tag.courses.count.to_f / (@time_table.days.count - 1)).ceil
                         counter = 0
                         
                         @meet_rooms[tag.id].each do |mr|
@@ -231,7 +231,7 @@ module ScheduleService
         def add_pairing()
             scheduled_time = ScheduleTime.create(
                 start: @mr[:meet_time].start,
-                end: @mr[:meet_time].end
+                end: @mr[:meet_time].end + 1.hour
             )
 
             ClassTimeTracker.create!(
