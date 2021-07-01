@@ -12,6 +12,7 @@ module ScheduleService
                 @time_table.class_time_trackers.destroy_all
                 @time_table.lecturer_time_trackers.destroy_all
                 @time_table.room_time_trackers.destroy_all
+                @general_department = @time_table.departments.where("LOWER(name) = ?",  "general").first
 
                 days_schedules = {}
                 @time_table.days.each do |day|
@@ -100,7 +101,7 @@ module ScheduleService
                         
                         days_estimate = (@tag.courses.count.to_f / (@time_table.days.count - 1)).ceil
                         counter = 0
-                        @meet_rooms = @meet_rooms.transform_values{ |v| v.shuffle }
+                        
                         @meet_rooms[tag.id].each do |mr|
                            
                             
@@ -131,6 +132,9 @@ module ScheduleService
                                 elsif constraints == "scheduled_already"
                                     puts "already scheduled"
                                     next
+                                elsif constraints == "general_class_busy"
+                                    puts "general already scheduled"
+                                    next 
                                 elsif constraints == "room_busy"
                                     
                                     break
@@ -208,10 +212,15 @@ module ScheduleService
                 return "class_busy"
             end
 
-            @schedule.pairings.each do |pairing|
-                if pairing.course == @course[:course]
-                    if pairing.time_tag.name.downcase == @course[:time_tag].name.downcase
-                        return "scheduled_already"
+            puts "_----------------"
+            schedule =  @time_table.schedules.joins(:pairings).where(pairings: {day_id: @day.id}).first
+            if schedule
+                schedule.pairings.each do |pairing|
+                    if pairing.course == @course[:course]
+                        if pairing.time_tag.name.downcase == @course[:time_tag].name.downcase
+                            
+                            return "scheduled_already"
+                        end
                     end
                 end
             end
@@ -228,29 +237,18 @@ module ScheduleService
                 end: @mr[:meet_time].end
             )
 
-            ClassTimeTracker.create!(
-                level: @course[:course].level,
-                department: @course[:course].department,
-                course_kind: @course[:course].kind,
-                day: @day,
-                time_table: @time_table,
-                schedule_time: scheduled_time
-            )
-
-            department = @course[:course].department
-            if department.name.downcase == "general"
-
-                @time_table.departments.each do |dept|
+            if @course[:course].department.name.downcase == "general"
+                @time_table.departments.each do |deps|
                     ClassTimeTracker.create!(
                         level: @course[:course].level,
-                        department: dept,
+                        department: deps,
                         course_kind: @course[:course].kind,
                         day: @day,
                         time_table: @time_table,
                         schedule_time: scheduled_time
                     )
                 end
-            else 
+            else
                 ClassTimeTracker.create!(
                     level: @course[:course].level,
                     department: @course[:course].department,
@@ -259,8 +257,26 @@ module ScheduleService
                     time_table: @time_table,
                     schedule_time: scheduled_time
                 )
+
+                ClassTimeTracker.create!(
+                    level: @course[:course].level,
+                    department: @general_department,
+                    course_kind: @course[:course].kind,
+                    day: @day,
+                    time_table: @time_table,
+                    schedule_time: scheduled_time
+                )
+
             end
 
+
+
+                
+                
+            
+
+            
+            
             @course[:course].lecturers.each do |l|
                 LecturerTimeTracker.create!(
                     lecturer: l, 

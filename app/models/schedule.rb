@@ -24,9 +24,10 @@ class Schedule < ApplicationRecord
 
                 start_at = (meet_time.start).between?(current_pairing.meet_time.start, current_pairing.meet_time.end - 5.minutes)
                 end_at = (meet_time.end - 5.minutes).between?(current_pairing.meet_time.start, current_pairing.meet_time.end)
+                start_1 = (current_pairing.meet_time.start).between?(meet_time.start, meet_time.end - 5.minutes)
+                end_1 = (current_pairing.meet_time.end - 5.minutes).between?(meet_time.start, meet_time.end)
 
-
-                if start_at || end_at
+                if start_at || end_at || start_1 || end_1
                     
                     if pairing.room.id == current_pairing.room.id
                         puts pairing.room.name
@@ -50,13 +51,18 @@ class Schedule < ApplicationRecord
 
                         end
                     end
+                    
 
                     
                     same_department = pairing.course.department == current_pairing.course.department
-                    general_department = pairing.course.department.name.downcase  == "general"
-                    if same_department || general_department
+                    general_department_pairing = pairing.course.department.name.downcase  == "general"
+                    general_department_current = current_pairing.course.department.name.downcase  == "general"
+                    if same_department || general_department_pairing || general_department_current
                         if pairing.course.level == current_pairing.course.level
                             unless pairing.course.kind == "elective" &&  current_pairing.course.kind == "elective"
+
+                                byebug 
+
                                 puts "level --- conflicts"
                                 puts "level --- conflicts"
                                 puts "level --- conflicts"
