@@ -61,7 +61,7 @@ class Schedule < ApplicationRecord
                         if pairing.course.level == current_pairing.course.level
                             unless pairing.course.kind == "elective" &&  current_pairing.course.kind == "elective"
 
-                                byebug 
+                               
 
                                 puts "level --- conflicts"
                                 puts "level --- conflicts"
