@@ -35,7 +35,7 @@ module ScheduleService
                         lecturer_courses = lecturer_courses.shuffle.each_slice(days_courses.ceil).to_a
                         lecturer.lecture_schedules.each_with_index do |ls, i|
                            
-                            
+                            next unless lecturer_courses[i]
                             lecturer_courses[i].each do |lc|
                                 days_schedules[ls.day.id][lc.first].push(
                                     {time_tag: TimeTag.find(lc.first),course: lc.last}
@@ -99,7 +99,7 @@ module ScheduleService
                         
                         @tag = tag
                         
-                        days_estimate = (@tag.courses.count.to_f / (@time_table.days.count - 1)).ceil
+                        days_estimate = (@tag.courses.count.to_f / (@time_table.days.count)).ceil + 1
                         counter = 0
                         
                         @meet_rooms[tag.id].each do |mr|
@@ -234,7 +234,7 @@ module ScheduleService
         def add_pairing()
             scheduled_time = ScheduleTime.create(
                 start: @mr[:meet_time].start,
-                end: @mr[:meet_time].end
+                end: @mr[:meet_time].end 
             )
 
             if @course[:course].department.name.downcase == "general"
@@ -271,7 +271,10 @@ module ScheduleService
 
 
 
-                
+            scheduled_time = ScheduleTime.create(
+                start: @mr[:meet_time].start,
+                end: @mr[:meet_time].end
+            )  
                 
             
 

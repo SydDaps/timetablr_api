@@ -5,8 +5,8 @@ class Lecturer < ApplicationRecord
     has_and_belongs_to_many :time_tables, dependent: :destroy
     has_and_belongs_to_many :days, dependent: :destroy
 
-    has_many :lecture_schedules
-    has_many :lecturer_time_trackers
+    has_many :lecture_schedules, dependent: :destroy
+    has_many :lecturer_time_trackers, dependent: :destroy
 
     
     validates :name, presence: { message: 'for lecturer blank' }
