@@ -258,14 +258,16 @@ module ScheduleService
                     schedule_time: scheduled_time
                 )
 
-                ClassTimeTracker.create!(
-                    level: @course[:course].level,
-                    department: @general_department,
-                    course_kind: @course[:course].kind,
-                    day: @day,
-                    time_table: @time_table,
-                    schedule_time: scheduled_time
-                )
+                if @general_department
+                    ClassTimeTracker.create!(
+                        level: @course[:course].level,
+                        department: @general_department,
+                        course_kind: @course[:course].kind,
+                        day: @day,
+                        time_table: @time_table,
+                        schedule_time: scheduled_time
+                    )
+                end
 
             end
 
