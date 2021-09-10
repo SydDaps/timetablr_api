@@ -4,7 +4,7 @@ class Course < ApplicationRecord
     
     has_many :course_schedules
     
-    has_many :pairings
+    has_many :pairings, dependent: :destroy
     has_many :schedules, through: :pairings
     
     belongs_to :level

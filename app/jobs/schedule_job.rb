@@ -3,13 +3,7 @@ class ScheduleJob < ApplicationJob
 
 	def perform(time_table)
 
-		puts time_table.name
-		puts time_table.name
-		puts time_table.name
-		puts time_table.name
-		puts time_table.name
-		puts time_table.name
-		puts time_table.name
+		
 		#check all possible classes can take place in a day with respect to tags
 		time_table.schedules.destroy_all
 		
