@@ -4,8 +4,8 @@ class StudentSerializer < BaseSerializer
             id: resource.id,
             name: resource.name,
             email: resource.email,
-            level: resource.level.id,
-            department: resource.department.id
+            level: resource.level.code,
+            department: resource.department.code
         }
     end
 end
