@@ -2,6 +2,11 @@ require 'sidekiq/web'
 
 Rails.application.routes.draw do
 
+  namespace :api do
+    namespace :v1 do
+      get 'students/create'
+    end
+  end
   mount ActionCable.server => '/cable'
   mount Sidekiq::Web => '/sidekiq'
   
@@ -18,6 +23,7 @@ Rails.application.routes.draw do
         resources :time_tags, only: [:create, :index, :update, :destroy]
         resources :departments, only: [:create, :index, :update, :destroy]
         resources :lecturers, only: [:create, :index, :update, :destroy]
+        resources :students, only: [:create]
         post '/lecturer_days', to: 'lecturers#link_days'
 
         resources :levels, only: [:create, :index, :destroy, :update]

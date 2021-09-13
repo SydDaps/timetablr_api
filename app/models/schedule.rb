@@ -1,4 +1,6 @@
 class Schedule < ApplicationRecord
+    has_many :pairings, dependent: :destroy
+
     has_many :courses, through: :pairings
 	has_many :rooms, through: :pairings
     has_many :lecturers, through: :pairings
@@ -8,8 +10,7 @@ class Schedule < ApplicationRecord
 
     belongs_to :time_table
 
-    has_many :pairings, dependent: :destroy
-
+    
 
 
     def calc_fitness

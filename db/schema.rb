@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_06_29_044131) do
+ActiveRecord::Schema.define(version: 2021_09_13_112158) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -227,6 +227,26 @@ ActiveRecord::Schema.define(version: 2021_06_29_044131) do
     t.index ["time_table_id"], name: "index_schedules_on_time_table_id"
   end
 
+  create_table "students", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "level_id", null: false
+    t.uuid "department_id", null: false
+    t.string "email"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "name"
+    t.index ["department_id"], name: "index_students_on_department_id"
+    t.index ["level_id"], name: "index_students_on_level_id"
+  end
+
+  create_table "students_time_tables", id: false, force: :cascade do |t|
+    t.uuid "student_id"
+    t.uuid "time_table_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["student_id"], name: "index_students_time_tables_on_student_id"
+    t.index ["time_table_id"], name: "index_students_time_tables_on_time_table_id"
+  end
+
   create_table "time_tables", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name"
     t.string "kind"
@@ -302,6 +322,8 @@ ActiveRecord::Schema.define(version: 2021_06_29_044131) do
   add_foreign_key "room_time_trackers", "time_tables"
   add_foreign_key "rooms", "time_tables"
   add_foreign_key "schedules", "time_tables"
+  add_foreign_key "students", "departments"
+  add_foreign_key "students", "levels"
   add_foreign_key "time_tables", "users"
   add_foreign_key "time_tags", "time_tables"
 end

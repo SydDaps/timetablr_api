@@ -15,6 +15,8 @@ class TimeTable < ApplicationRecord
     has_many :class_time_trackers , dependent: :destroy
     has_many :room_time_trackers , dependent: :destroy
 
+    has_and_belongs_to_many :students
+
     has_and_belongs_to_many :lecturers
 
     validates :name, presence: { message: 'for time table blank' }

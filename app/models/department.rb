@@ -3,6 +3,7 @@ class Department < ApplicationRecord
     has_many :class_time_trackers, dependent: :destroy
 
     has_many :courses, dependent: :destroy
+    has_many :students, dependent: :destroy
 
     validates :name, presence: { message: 'for Department blank' }
     validates :code, presence: { message: 'for Department blank' }

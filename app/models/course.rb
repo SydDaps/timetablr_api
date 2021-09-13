@@ -6,6 +6,7 @@ class Course < ApplicationRecord
     
     has_many :pairings, dependent: :destroy
     has_many :schedules, through: :pairings
+    has_many :rooms, through: :pairings
     
     belongs_to :level
     belongs_to :department
