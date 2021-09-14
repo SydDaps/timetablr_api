@@ -79,7 +79,8 @@ class Api::V1::LecturersController < ApplicationController
             success: true,
             code: 200,
             data: {
-                lecturer: lecturer,
+                user: lecturer,
+                read_only: true,
                 time_table: TimeTableSerializer.new( lecturer.time_tables ).serialize,
                 access_token: token
             },

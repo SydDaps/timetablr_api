@@ -51,7 +51,8 @@ class Api::V1::StudentsController < ApplicationController
       success: true,
       code: 200,
       data: {
-        student: student,
+        user: student,
+        read_only: true,
         time_table: TimeTableSerializer.new( student.time_tables ).serialize,
         access_token: token
       },
