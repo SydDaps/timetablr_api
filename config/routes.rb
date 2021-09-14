@@ -15,6 +15,9 @@ Rails.application.routes.draw do
       resources :token, only: [:create]
       resources :users, only: [:create]
       resources :time_tables, only: [:create, :index, :show]
+
+      post 'student/login', to: 'students#login'
+      post 'lecturer/login', to: 'lecturers#login'
       
       resources :time_tables do
         resources :rooms, only: [:create, :index, :update, :destroy]
@@ -22,10 +25,12 @@ Rails.application.routes.draw do
         
         resources :time_tags, only: [:create, :index, :update, :destroy]
         resources :departments, only: [:create, :index, :update, :destroy]
-        resources :lecturers, only: [:create, :index, :update, :destroy]
-        resources :students, only: [:create, :index]
-        post '/lecturer_days', to: 'lecturers#link_days'
 
+        resources :lecturers, only: [:create, :index, :update, :destroy]
+        post '/lecturer_days', to: 'lecturers#link_days'
+        
+        resources :students, only: [:create, :index]
+        
         resources :levels, only: [:create, :index, :destroy, :update]
         resources :courses, only: [:create, :index, :update, :destroy]
         resources :scheduler, only: [:create, :index, :update, :destroy]

@@ -19,6 +19,7 @@ class  Api::V1::TimeTablesController < ApplicationController
   end
 
   def index
+  
     render json: {
       success: true,
       code: 200,

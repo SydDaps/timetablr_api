@@ -1,5 +1,7 @@
 class Api::V1::LecturersController < ApplicationController
 
+    skip_before_action :authenticate_request, :only => [:login]
+
     def create
         time_table = current_time_table
 
@@ -62,6 +64,27 @@ class Api::V1::LecturersController < ApplicationController
               lecturers: LecturerSerializer.new( current_time_table.lecturers ).serialize
             }
         }
+    end
+
+    def login
+        email = params[:email]
+    
+        lecturer = Lecturer.find_by_email(email)
+
+        token = Jwt::JsonWebToken.encode({lecturer_id: lecturer.id}) if lecturer
+
+        raise Exceptions::NotUniqueRecord.message("The email #{email} has no timetable schedules.") unless lecturer
+
+        render json: {
+            success: true,
+            code: 200,
+            data: {
+                lecturer: lecturer,
+                time_table: TimeTableSerializer.new( lecturer.time_tables ).serialize,
+                access_token: token
+            },
+        }
+
     end
 
     

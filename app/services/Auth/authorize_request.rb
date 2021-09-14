@@ -11,7 +11,15 @@ module Auth
         private
 
         def user
-            @user ||= User.find(decode_auth_token[:user_id]) if decode_auth_token
+            if decode_auth_token
+                if decode_auth_token[:user_id]
+                    @user ||= User.find(decode_auth_token[:user_id])
+                elsif decode_auth_token[:student_id]
+                    @user ||= Student.find(decode_auth_token[:student_id])
+                elsif decode_auth_token[:lecturer_id]
+                    @user ||= Lecturer.find(decode_auth_token[:lecturer_id])
+                end
+            end
             raise Exceptions::UnauthorizedOperation.message("User Not found") unless @user
             @user
         end

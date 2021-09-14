@@ -11,14 +11,21 @@ module StudentService
 
         def call
             @students.each do |details|
-                student = Student.create(
-                    level_id: @level_id,
-                    department_id: @department_id,
-                    email: details[:email],
-                    name: details[:name]
-                )
+                student = Student.find_by_email(details[:email])
+                
+                unless student
+                    puts "come here ppppp"
+                    student = Student.create(
+                        level_id: @level_id,
+                        department_id: @department_id,
+                        email: details[:email],
+                        name: details[:name]
+                    )
+                end
 
-                student.time_tables << @time_table
+                unless student.time_tables.find_by(id: @time_table.id)
+                    student.time_tables << @time_table
+                end
             end
 
         end
