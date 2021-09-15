@@ -1,12 +1,119 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
-  </head>
-  <body>
-    <p><%= @time_table.name %> timetable out now</p>
-    <p> Click the link below to check your schedule <p>
-    <p>https://timetablr.netlify.app/view/<%= @time_table.id %><p>
-    
-  </body>
+
+<head>
+    <title></title>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=ABeeZee:ital@0;1&display=swap" rel="stylesheet">
+
+    <style type="text/css">
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'ABeeZee', sans-serif;
+            line-height: 150%;
+        }
+
+        .no-decoration {
+            text-decoration: NONE;
+            color: #000
+        }
+
+        .banner {
+            background-color: #000;
+            display: block;
+            padding: 2.5rem;
+            text-align: center;
+            color: #fff;
+        }
+
+        .content {
+            text-align: center;
+            margin: 3rem 0;
+        }
+
+        .btn {
+            background: #000;
+            border: none;
+            border-radius: 0.2rem;
+            padding: 0.5rem 1rem;
+            color: white;
+            font: inherit;
+            cursor: pointer;
+            outline: none;
+            font-size: 1rem;
+        }
+
+        .btn:focus, .btn:hover {
+            opacity: 0.85;
+        }
+
+        .footer {
+            text-align: center;
+            font-size: 0.8rem;
+        }
+
+        .footer hr{
+            margin: 3rem 0;
+        }
+
+        .footer img {
+            width: 9rem;
+            margin-top: 1rem;
+        }
+
+        .message {
+            margin: 4rem auto;
+            width: 80%;
+        }
+
+        .say-hello {
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div>
+        <div class="banner">
+           <h2>TIMETABLR</h2>
+        </div>
+        <div class="message">
+            <p class="say-hello">Hello</p>
+
+            <p>You are receiving this email because you have been invited to view <%= @time_table.name %> on <a href="https://timetablr.netlify.app/">Timetablr</a>.</p>
+
+            <div class="content">
+                <a href="#">
+                    <button class="btn">CHECK SCHEDULE</button>
+                </a>
+            </div>
+
+            <p>If you're having trouble with the button above, copy and paste the URL below in your browser.
+                <br/> [TIMETABLE-URL]
+            </p>
+
+            <br />
+
+            <p>Thanks,<br /> Timetablr</p>
+
+
+            <div class="footer">
+                <hr />
+                <a href="https://timetablr.netlify.app/" class="no-decoration"><h2>TIMETABLR</h2></a>
+                <a href="#">Unsubcribe</a>
+
+            </div>
+        </div>
+
+</body>
+
 </html>
