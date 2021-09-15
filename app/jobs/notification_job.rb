@@ -8,18 +8,27 @@ class NotificationJob < ApplicationJob
         today_schedules.each do |meet_time|
 
             
-            if(Time.parse(meet_time.start.strftime("%H:%M:%S")).between?(Time.now, Time.now + 1.hours + 30.minutes))
+            if(Time.parse(meet_time.start.strftime("%H:%M:%S")).between?(Time.now, Time.now + 4.hours))
 
                 
                 meet_time.pairings.each do |pairing|
-
                     
+                    if $redis.get("pairing#{pairing.id}")
+                        puts "---------------------------------------------------"
+                        puts "Already printed"
+                        next
+                    end
                         
                     if pairing.day.name ==  Date.today.strftime("%A")
                         puts "---------------------------------------------------"
                         puts "the Course #{ pairing.course.name } #{ pairing.meet_time.start } #{pairing.day.name} #{pairing.time_tag.name}"
+
+                        $redis.setex("pairing#{pairing.id}", pairing.time_tag.duration + 30.minutes, true)
+
+                        puts "---------------------------------------------------"
+                        puts $redis.get("pairing#{pairing.id}")
                     end
-                    
+
 
                     
                 end
