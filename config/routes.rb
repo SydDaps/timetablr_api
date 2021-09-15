@@ -16,6 +16,8 @@ Rails.application.routes.draw do
       resources :users, only: [:create]
       resources :time_tables, only: [:create, :index, :show]
 
+      
+
       post 'student/login', to: 'students#login'
       post 'lecturer/login', to: 'lecturers#login'
       
@@ -28,6 +30,12 @@ Rails.application.routes.draw do
 
         resources :lecturers, only: [:create, :index, :update, :destroy]
         post '/lecturer_days', to: 'lecturers#link_days'
+
+        post '/publish', to: 'time_tables#publish'
+
+        
+
+        
         
         resources :students, only: [:create, :index]
         

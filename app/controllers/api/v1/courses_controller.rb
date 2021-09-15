@@ -21,6 +21,7 @@ class Api::V1::CoursesController < ApplicationController
       end
     end
 
+
     render json: {
       success: true,
       code: 200,

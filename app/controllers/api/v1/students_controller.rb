@@ -11,14 +11,6 @@ class Api::V1::StudentsController < ApplicationController
         students: StudentSerializer.new( current_time_table.students  ).serialize
       }
     }
-
-    # params = {
-    #   emails: ["sydneyyork139@gmail.com", "sdapilah@st.ug.edu.gh"],
-    #   time_table: TimeTable.first
-    # }
-
-    # PublishMailer.new_timetable_mail(params).deliver_now
-
   end
 
 

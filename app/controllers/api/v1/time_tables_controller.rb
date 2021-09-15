@@ -40,5 +40,32 @@ class  Api::V1::TimeTablesController < ApplicationController
     }
   end
 
+  def publish
+    
+    if current_time_table.status.downcase == "pending"
+      raise Exceptions::NotUniqueRecord.message("TimeTable needs to be completed before publishing")
+    end
+
+    students = current_time_table.students.map{ |s| s.email }
+    lecturers = current_time_table.lecturers.map{ |l| l.email }
+
+    
+    params = {
+      emails: students + lecturers,
+      time_table: current_time_table
+    }
+
+    MailJob.perform_later(params)
+
+    render json: {
+      success: true,
+      code: 200,
+      data: {
+        message: "TimeTable is being published"
+      },
+    }
+        
+  end
 
 end
+
