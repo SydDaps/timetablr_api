@@ -19,9 +19,16 @@ module ApplicationCable
 
       user = Jwt::JsonWebToken.decode(token)
       
-      return reject_unauthorized_connection  unless user 
+      return reject_unauthorized_connection  unless user
       
-      User.find(user[:user_id])
+
+      if user[:user_id]
+        User.find(user[:user_id])
+      elsif user[:student_id]
+        Student.find(user[:student_id])
+      elsif user[:lecturer_id]
+        Lecturer.find(user[:lecturer_id])
+      end
     end
 
   end

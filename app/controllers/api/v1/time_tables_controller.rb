@@ -52,7 +52,8 @@ class  Api::V1::TimeTablesController < ApplicationController
     
     params = {
       emails: students + lecturers,
-      time_table: current_time_table
+      time_table: current_time_table,
+      user: current_user
     }
 
     MailJob.perform_later(params)

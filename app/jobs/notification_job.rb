@@ -4,6 +4,13 @@ class NotificationJob < ApplicationJob
 
 	def perform()
 
+        ActionCable.server.broadcast(
+            "notify_#{Student.find_by_email("daps@gmail.com")}", 
+            {
+                message: "#{Time.now} this is working"
+            }
+        )
+
         today_schedules = TimeTable.find("ae1bd5da-31b1-4edf-b08a-460f5c3b05b6").time_tags.map{ |l| l.meet_times }.flatten
         today_schedules.each do |meet_time|
 
@@ -12,6 +19,8 @@ class NotificationJob < ApplicationJob
 
                 
                 meet_time.pairings.each do |pairing|
+
+                    
                     
                     if $redis.get("pairing#{pairing.id}")
                         puts "---------------------------------------------------"
@@ -27,10 +36,7 @@ class NotificationJob < ApplicationJob
 
                         puts "---------------------------------------------------"
                         puts $redis.get("pairing#{pairing.id}")
-                    end
-
-
-                    
+                    end            
                 end
             end
         end
