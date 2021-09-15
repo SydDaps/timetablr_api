@@ -19,6 +19,7 @@ gem 'figaro', '~> 1.1', '>= 1.1.1'
 gem 'jwt', '~> 1.5', '>= 1.5.4'
 gem 'rack-cors'
 gem 'sidekiq', '~> 4.1', '>= 4.1.2'
+gem "sidekiq-cron", "~> 1.1"
 gem 'foreman', '~> 0.87.2'
 
 # Use Active Storage variant

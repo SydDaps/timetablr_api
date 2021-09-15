@@ -1,6 +1,8 @@
-require 'sidekiq/web'
+
 
 Rails.application.routes.draw do
+  require 'sidekiq/web'
+  require 'sidekiq/cron/web'
 
   namespace :api do
     namespace :v1 do

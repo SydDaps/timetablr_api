@@ -5,7 +5,11 @@ class Day < ApplicationRecord
     
     has_many :course_schedules
     
+    has_many :pairings, dependent: :destroy
     has_many :schedules, through: :pairings
+    has_many :courses, through: :pairings
+    has_many :meet_times, through: :pairings
+
     has_many :lecture_schedules, dependent: :destroy
     has_many :lecturer_time_trackers, dependent: :destroy
     has_many :class_time_trackers, dependent: :destroy

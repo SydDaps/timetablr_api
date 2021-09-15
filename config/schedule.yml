@@ -1,0 +1,4 @@
+generate_random_number:
+  cron: "* * * * *"
+  class: "NotificationJob"
+  queue: default
