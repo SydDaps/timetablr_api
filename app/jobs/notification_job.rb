@@ -4,39 +4,64 @@ class NotificationJob < ApplicationJob
 
 	def perform()
 
-        ActionCable.server.broadcast(
-            "notify_#{Student.find_by_email("daps@gmail.com").id}", 
-            {
-                message: "#{Time.now} this is working"
-            }
-        )
-
-        today_schedules = TimeTable.find("ae1bd5da-31b1-4edf-b08a-460f5c3b05b6").time_tags.map{ |l| l.meet_times }.flatten
-        today_schedules.each do |meet_time|
-
-            
-            if(Time.parse(meet_time.start.strftime("%H:%M:%S")).between?(Time.now, Time.now + 4.hours))
+        
+        TimeTable.all.where(is_published: true).each do |time_table|
+            today_schedules = time_table.time_tags.map{ |l| l.meet_times }.flatten
+            today_schedules.each do |meet_time|
 
                 
-                meet_time.pairings.each do |pairing|
+                if(Time.parse(meet_time.start.strftime("%H:%M:%S")).between?(Time.parse("7:00"), Time.parse("7:30") + 30.minutes))
 
                     
-                    
-                    if $redis.get("pairing#{pairing.id}")
-                        puts "---------------------------------------------------"
-                        puts "Already printed"
-                        next
-                    end
+                    meet_time.pairings.each do |pairing|
+
                         
-                    if pairing.day.name ==  Date.today.strftime("%A")
-                        puts "---------------------------------------------------"
-                        puts "the Course #{ pairing.course.name } #{ pairing.meet_time.start } #{pairing.day.name} #{pairing.time_tag.name}"
+                        
+                        if $redis.get("pairing#{pairing.id}")
+                            puts "---------------------------------------------------"
+                            puts "Already printed"
+                            next
+                        end
+                            
+                        if pairing.day.name ==  "Thursday"
+                            
 
-                        $redis.setex("pairing#{pairing.id}", pairing.time_tag.duration + 30.minutes, true)
+                            # $redis.setex("pairing#{pairing.id}", pairing.time_tag.duration + 30.minutes, true)
 
-                        puts "---------------------------------------------------"
-                        puts $redis.get("pairing#{pairing.id}")
-                    end            
+                            
+
+                            pairing.course.lecturers.each do |lecturer|
+                                ActionCable.server.broadcast(
+                                    "notify_#{lecturer.id}", 
+                                    {
+                                        message: "#{ pairing.course.name } starts at #{ pairing.meet_time.start }"
+                                    }
+                                )
+
+                                puts "--------------------------------------------------- lecturer"
+                                puts "#{ pairing.course.name } starts at #{ pairing.meet_time.start.strftime("%I:%M%p") }"
+                                puts "#{ lecturer.email } lecturer get"
+                            
+                            end
+0
+                            time_table.students.each do |student|
+                                level = student.level
+                                department = student.department
+                                if(level == pairing.course.level && department == pairing.course.department)
+                                    ActionCable.server.broadcast(
+                                        "notify_#{student.id}", 
+                                        {
+                                            message: "#{ pairing.course.name } starts at #{ pairing.meet_time.start.strftime("%I:%M%p") } don't be late"
+                                        }
+                                    )
+
+                                    puts "--------------------------------------------------- student"
+                                    puts "#{ pairing.course.name } starts at #{ pairing.meet_time.start.strftime("%I:%M%p") } don't be late"
+                                    puts "#{ student.email} will get"
+                                end
+                            end
+                        end            
+                    end
                 end
             end
         end
