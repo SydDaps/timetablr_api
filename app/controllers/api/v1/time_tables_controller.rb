@@ -43,7 +43,7 @@ class  Api::V1::TimeTablesController < ApplicationController
   def publish
     
     if current_time_table.status.downcase == "pending"
-      raise Exceptions::NotUniqueRecord.message("TimeTable needs to be completed before publishing")
+      raise Exceptions::NotUniqueRecord.message("Timetable needs to be completed before publishing")
     end
 
     students = current_time_table.students.map{ |s| s.email }
@@ -61,7 +61,7 @@ class  Api::V1::TimeTablesController < ApplicationController
       success: true,
       code: 200,
       data: {
-        message: "TimeTable is being published"
+        message: "Timetable is being published"
       },
     }
         
