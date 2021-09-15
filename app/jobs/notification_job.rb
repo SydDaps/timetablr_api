@@ -5,7 +5,7 @@ class NotificationJob < ApplicationJob
 	def perform()
 
         ActionCable.server.broadcast(
-            "notify_#{Student.find_by_email("daps@gmail.com")}", 
+            "notify_#{Student.find_by_email("daps@gmail.com").id}", 
             {
                 message: "#{Time.now} this is working"
             }
