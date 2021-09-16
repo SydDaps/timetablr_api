@@ -1,4 +1,4 @@
 class ApplicationMailer < ActionMailer::Base
-  default from: 'New TimeTable schedule < timetablr1@gmail.com >'
+  default from: 'Timetablr < mailer@timetablr.xyz >'
   layout 'mailer'
 end

@@ -3,7 +3,8 @@ class PublishMailer < ApplicationMailer
 
         @emails = params[:emails]
         @time_table = params[:time_table]
+        @current_user = params[:user]
 
-        mail(to: @emails, subject: @time_table.user.name)
+        mail(to: @emails, subject: "New Timetable out!")
     end
 end

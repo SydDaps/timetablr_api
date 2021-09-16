@@ -87,18 +87,18 @@
            <h2>TIMETABLR</h2>
         </div>
         <div class="message">
-            <p class="say-hello">Hello</p>
+            <p class="say-hello">Hi</p>
 
             <p>You are receiving this email because you have been invited to view <%= @time_table.name %> on <a href="https://timetablr.netlify.app/">Timetablr</a>.</p>
 
             <div class="content">
-                <a href="#">
+                <a href="https://timetablr.netlify.app/view/<%= @time_table.id %>">
                     <button class="btn">CHECK SCHEDULE</button>
                 </a>
             </div>
 
             <p>If you're having trouble with the button above, copy and paste the URL below in your browser.
-                <br/> [TIMETABLE-URL]
+                <br/> https://timetablr.netlify.app/view/<%= @time_table.id %>
             </p>
 
             <br />

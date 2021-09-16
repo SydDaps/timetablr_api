@@ -28,18 +28,7 @@ class ScheduleJob < ApplicationJob
 			total_pairings = ScheduleService::Scheduler.call(params)
 		# end
 
-		
-		
-		
 			
-
-		
-
-		puts "-------------"
-		puts total_courses
-		puts total_pairings
-
-		
 
 
 		time_table.update!(status: "completed")
