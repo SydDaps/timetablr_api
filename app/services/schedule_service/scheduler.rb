@@ -14,6 +14,7 @@ module ScheduleService
                 @time_table.room_time_trackers.destroy_all
                 @general_department = @time_table.departments.where("LOWER(name) = ?",  "general").first
 
+                #this data structure keeps track of the days schedules
                 days_schedules = {}
                 @time_table.days.each do |day|
                     days_schedules[day.id] = {}
@@ -22,17 +23,23 @@ module ScheduleService
                     end
                 end
                 
+                #Scheduling lecturers based in days they were scheduled to
 
                 @time_table.lecturers.each do |lecturer|
+                    
                     unless lecturer.lecture_schedules.empty?
                         
                         total = lecturer.lecture_schedules.count
                         lecturer_courses = []
+                        
                         lecturer.courses.where({time_table_id: @time_table.id}).each do |course|
                             course.time_tags.each{ |l| lecturer_courses.push([l.id, course])}
                         end
-                        days_courses =  lecturer_courses.count / total.to_f 
+                       
+                        days_courses =  lecturer_courses.count / total.to_f
+                        
                         lecturer_courses = lecturer_courses.shuffle.each_slice(days_courses.ceil).to_a
+
                         lecturer.lecture_schedules.each_with_index do |ls, i|
                            
                             next unless lecturer_courses[i]
@@ -40,6 +47,7 @@ module ScheduleService
                                 days_schedules[ls.day.id][lc.first].push(
                                     {time_tag: TimeTag.find(lc.first),course: lc.last}
                                 )
+                                
                                 @courses[lc.first].delete({time_tag: TimeTag.find(lc.first),course: lc.last})
                                 
                             end
