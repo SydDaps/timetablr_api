@@ -27,6 +27,8 @@ module ScheduleService
 
                 @time_table.lecturers.each do |lecturer|
                     
+                    next if lecturer.courses.empty?
+
                     unless lecturer.lecture_schedules.empty?
                         
                         total = lecturer.lecture_schedules.count
