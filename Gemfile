@@ -36,9 +36,12 @@ gem 'bootsnap', '>= 1.4.4', require: false
 # gem 'rack-cors'
 
 group :development, :test do
-  # Call 'byebug' anywhere in the code to stop execution and get a debugger console
+  gem 'capistrano', '~> 3.10', require: false
+  gem 'capistrano-rails', '~> 1.5', require: false
+  gem 'capistrano-rvm', '~> 0.1.2'
+  gem 'capistrano-db-tasks', require: false
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
-  
+
 end
 
 group :development do
