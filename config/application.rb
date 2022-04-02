@@ -12,7 +12,7 @@ require "action_mailbox/engine"
 require "action_text/engine"
 require "action_view/railtie"
 require "action_cable/engine"
-# require "sprockets/railtie"
+require "sprockets/railtie"
 require "rails/test_unit/railtie"
 
 # Require the gems listed in Gemfile, including any gems
@@ -25,7 +25,7 @@ module TimetablrApi
     config.load_defaults 6.1
     config.autoload_paths += %W(
       #{ Rails.root.join('lib') }
-      #{ Rails.root.join('app', 'serializers') } 
+      #{ Rails.root.join('app', 'serializers') }
     )
     # Configuration for the application, engines, and railties goes here.
     #
