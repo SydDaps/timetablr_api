@@ -23,7 +23,6 @@ development:
   username: <%= ENV['TIMETABLR_API_DB_USERNAME'] %>
   password: <%= ENV['TIMETABLR_API_DB_PASSWORD'] %>
   host: localhost
-  port: 5432
 test:
   <<: *default
   database: timetablr_api_test
@@ -34,5 +33,5 @@ production:
   <<: *default
   database: timetablr_api_production
   username: <%= ENV['TIMETABLR_API_DB_USERNAME'] %>
-  password: <%= ENV['TIMETABLR_API_DATABASE_PASSWORD'] %>
+  password: <%= ENV['TIMETABLR_API_DB_PASSWORD'] %>
   host: <%= ENV['DB_HOST'] %>
