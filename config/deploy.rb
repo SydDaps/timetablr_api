@@ -16,7 +16,16 @@ set :keep_assets, 3
 set :db_local_clean, true
 set :db_remote_clean, true
 
-set :default_env, { path: "/opt/ruby/bin:$PATH" }
+set :default_env, {
+  TIMETABLR_API_DB_USERNAME: "postgres",
+  TIMETABLR_API_DB_PASSWORD: "password",
+  TIMETABLR_API_SECRETE: "hdfjhgfghvfofngb",
+  GMAIL_USERNAME: "timetablr1@gmail.com",
+  GMAIL_PASSWORD: "ditpmhtpkyfqioye",
+  APIKEY: "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",
+  DB_HOST: "localhost",
+  REDIS_URL: "redis://127.0.0.1:6379/1"
+}
 
 namespace :deploy do
   desc 'Restart application'

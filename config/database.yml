@@ -17,21 +17,21 @@ default: &default
   adapter: postgresql
   encoding: unicode
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  host: localhost
 development:
   <<: *default
   database: timetablr_api_development
   username: <%= ENV['TIMETABLR_API_DB_USERNAME'] %>
   password: <%= ENV['TIMETABLR_API_DB_PASSWORD'] %>
-  host: localhost
+
 test:
   <<: *default
   database: timetablr_api_test
   username: <%= ENV['TIMETABLR_API_DB_USERNAME'] %>
   password: <%= ENV['TIMETABLR_API_DB_PASSWORD'] %>
-  host: localhost
+
 production:
   <<: *default
   database: timetablr_api_production
-  username: <%= ENV['TIMETABLR_API_DB_USERNAME'] %>
-  password: 'password'
-  host: <%= ENV['DB_HOST'] %>
+  username: postgres
+  password: password
