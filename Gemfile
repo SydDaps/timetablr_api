@@ -25,6 +25,9 @@ gem 'rack-cors'
 gem 'sidekiq', '~> 4.1', '>= 4.1.2'
 gem "sidekiq-cron", "~> 1.1"
 gem 'foreman', '~> 0.87.2'
+gem 'net-ssh', '>= 6.0.2'
+gem 'ed25519', '>= 1.2', '< 2.0'
+gem 'bcrypt_pbkdf', '>= 1.0', '< 2.0'
 
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
