@@ -3,6 +3,13 @@ require 'capistrano/deploy'
 require 'capistrano/rvm'
 require 'figaro'
 
+Figaro.application = Figaro::Application.new(
+  environment: fetch(:stage),
+  path: File.expand_path('../config/application.yml', __FILE__)
+)
+
+Figaro.load
+
 set :rvm_type, :user
 set :rvm_ruby_version, '3.0.1'
 

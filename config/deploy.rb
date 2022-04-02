@@ -16,6 +16,8 @@ set :keep_assets, 3
 set :db_local_clean, true
 set :db_remote_clean, true
 
+set :default_env, { path: "/opt/ruby/bin:$PATH" }
+
 namespace :deploy do
   desc 'Restart application'
   task :restart do
@@ -26,4 +28,13 @@ namespace :deploy do
 
   after :publishing, 'deploy:restart'
   after :finishing, 'deploy:cleanup'
+end
+
+namespace :debug do
+  desc 'Print ENV variables'
+  task :env do
+    on roles(:app), in: :sequence, wait: 5 do
+      execute :printenv
+    end
+  end
 end

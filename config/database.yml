@@ -33,5 +33,5 @@ production:
   <<: *default
   database: timetablr_api_production
   username: <%= ENV['TIMETABLR_API_DB_USERNAME'] %>
-  password: <%= ENV['TIMETABLR_API_DB_PASSWORD'] %>
+  password: 'password'
   host: <%= ENV['DB_HOST'] %>
