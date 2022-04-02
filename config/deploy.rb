@@ -4,7 +4,7 @@ lock "~> 3.17.0"
 set :application, "timetablr_api"
 set :repo_url, "git@github.com:SydDaps/timetablr_api.git"
 
-set :deploy_to, '/timetablr/backend'
+set :deploy_to, '/home/compeng/timetablr/backend'
 set :branch, ENV['BRANCH'] if ENV['BRANCH']
 
 set :linked_files, %w{config/database.yml config/master.key}
